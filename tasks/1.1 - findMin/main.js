@@ -11,8 +11,16 @@ function setup() {
 // Užitečné funkce:
 //      list[i] - položka v seznamu na pozici i
 //      list.length - délka seznamu
-//      for(int i = 0; i < max; i++) - udělá něco max-krát, do proměnné i nastaví postupně čísla od 0 do (max - 1)
+//      for(let i = 0; i < max; i++) - udělá něco max-krát, do proměnné i nastaví postupně čísla od 0 do (max - 1)
 //      return x - vrátí z funkce hodnotu x
 function findMin(list) {
-    return 0
+    var max
+    var a = 100
+    max = list.length
+    for(let i = 0; i < max; i++) {
+        if(a > list[i]){
+            a = list[i]
+        }
+    }
+    return a
 }
