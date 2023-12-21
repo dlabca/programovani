@@ -6,22 +6,16 @@ function setup() {
     print(`Sorted: ${mySort(randomList)}`);
 }
 
-
 function findMin(list) {
     var max
     var a = 100
     max = list.length
-    for(var t = 0; t < max; t++) {
-        for(i = 0; i < max; i++) {
-            if(a > list[i]){
-                x[i] = list[i]
-            }
+    for(let i = 0; i < max; i++) {
+        if(a > list[i]){
+            a = list[i]
         }
     }
-    for(var o = 0; o < x.length; o++){
-        return x[o]
-    }
-    
+    return a
 }
 
 // Doplňtě funkci mySort, aby vrátila setřízený seznam (od nejmenšího po největší)
@@ -34,17 +28,16 @@ function findMin(list) {
 //      while(cond) - opakuje něco dokud platí podmínka cond (funguje podobně jako for)
 // Tip - můžete vždy najít nejmenší číslo v seznamu, smazat ho a přidat ho do nového seznamu,
 // nový seznam bude potom obsahovat stejná čísla jako původní, ale ve správněm pořadí
-/*
-function mySort(list) {
-    let min = findMin(list[i])
-
-    return list
+function mySort(list){
+    var serazenilist = []
+    var len = list.length
+    for(var p = 0;p < len;p++){
+        var min = findMin(list)
+        serazenilist.push(min);
+        list.splice(list.indexOf(min), 1)
+    }
+    return serazenilist
 }
-*/
-
-
-
-
 
 // alternativně můžete zkusit použít algoritmus 'bubble sort', který prochází seznam po dvojicích a
 // prohazuje dvojice které jsou špatně seřazené, dokud není seznam celý správně seřazený
