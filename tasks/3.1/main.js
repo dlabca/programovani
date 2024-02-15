@@ -10,5 +10,8 @@
 //      createVector(x, y)
 
 class Rigidbody {
+    constructor(x,y){
+        this.pos = createVector(x, y)
     
+    }
 }
