@@ -1,5 +1,0 @@
-<<<<<<< HEAD
-class poki
-=======
-this is a test
->>>>>>> 8b74389c1ac22936ca708551fca9cb7703051cac
