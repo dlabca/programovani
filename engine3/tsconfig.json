@@ -3,14 +3,14 @@
       "target": "es2022",
       "module": "commonjs",
       "outDir": "./src/lib",
-      "rootDir": "./src/lib/src",
-      "declaration": true,
-      "declarationDir": "./src/lib/types",
+      "rootDir": "./src",
       "strict": true,
-      "esModuleInterop": true
+      "esModuleInterop": true,
+      "allowJs": true
   },
   "include": [
-      "src/lib/src/**/*.ts"
+      "src/ts/*",
+      "src/*.js"
   ],
   "exclude": [
       "node_modules"
