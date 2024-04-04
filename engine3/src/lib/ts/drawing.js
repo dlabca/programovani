@@ -162,5 +162,15 @@ function rect(x, y, w, h) {
         Draw.ctx.strokeRect(x, y, w, h);
     }
 }
+function circle(x, y, r) {
+    Draw.applyStack();
+    Draw.ctx.beginPath();
+    Draw.ctx.ellipse(x, y, r, r, 0, 0, 2 * Math.PI);
+    Draw.ctx.closePath();
+    if (Draw.settings.fillColor != null)
+        Draw.ctx.fill();
+    if (Draw.settings.strokeColor != null)
+        Draw.ctx.stroke();
+}
 //#endregion
 //#endregion
