@@ -1,5 +1,7 @@
 "use strict";
 let deltaTime = 0;
+const fixedDeltaTime = 0.01;
+let extraFixedTime = 0;
 let width = 400, height = 400;
 function start() {
     let canvas = document.createElement("canvas");
@@ -37,16 +39,24 @@ class Engine {
     }
     static update() {
         let now = Date.now();
-        deltaTime = (now - Engine.lastUpdate) / Engine.inverseFramerate;
+        deltaTime = (now - Engine.lastUpdate) / 1000.0;
         Engine.lastUpdate = now;
-        //@ts-ignore
-        draw();
+        extraFixedTime += deltaTime;
+        while (extraFixedTime >= fixedDeltaTime) {
+            Physics.update();
+            for (const object of Engine.objects) {
+                object.fixedUpdate();
+            }
+            extraFixedTime -= fixedDeltaTime;
+        }
         for (let i = 0; i < Engine.objects.length; i++) {
             const gameObject = Engine.objects[i];
             if (gameObject.destroyed)
                 Engine.objects.splice(i--, 1);
             gameObject.update();
         }
+        //@ts-ignore
+        draw();
         Input.update();
         Renderer.render();
     }
@@ -76,6 +86,21 @@ class GameObject {
                 component.update();
         }
     }
+    fixedUpdate() {
+        for (const component of this.components) {
+            component.fixedUpdate();
+        }
+    }
+    onCollisionEnter(col) {
+        for (const component of this.components) {
+            component.onCollisionEnter(col);
+        }
+    }
+    onCollisionExit(col) {
+        for (const component of this.components) {
+            component.onCollisionExit(col);
+        }
+    }
     addComponent(component) {
         this.components.push(component);
         component.gameObject = this;
@@ -94,6 +119,15 @@ class GameObject {
         for (const component of this.components)
             component.destroyed = true;
     }
+    static findObjectsOfType(type) {
+        let out = [];
+        for (const object of Engine.objects) {
+            let component = object.getComponent(type);
+            if (component)
+                out.push(component);
+        }
+        return out;
+    }
 }
 class Component {
     gameObject;
@@ -102,5 +136,8 @@ class Component {
     getComponent(type) { return this.gameObject.getComponent(type); }
     start() { }
     update() { }
+    fixedUpdate() { }
     destroy() { }
+    onCollisionEnter(col) { }
+    onCollisionExit(col) { }
 }

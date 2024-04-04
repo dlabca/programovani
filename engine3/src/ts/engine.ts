@@ -1,5 +1,7 @@
 
 let deltaTime = 0;
+const fixedDeltaTime = 0.01;
+let extraFixedTime = 0;
 let width: number = 400, height: number = 400;
 
 function start() {
@@ -52,12 +54,20 @@ class Engine {
     static update() {
 
         let now = Date.now();
-        deltaTime = (now - Engine.lastUpdate) / Engine.inverseFramerate;
+        deltaTime = (now - Engine.lastUpdate) / 1000.0;
         Engine.lastUpdate = now;
-
-        //@ts-ignore
-        draw();
         
+        extraFixedTime += deltaTime;
+        while (extraFixedTime >= fixedDeltaTime) {
+            Physics.update();
+
+            for (const object of Engine.objects) {
+                object.fixedUpdate();
+            }
+
+            extraFixedTime -= fixedDeltaTime;
+        }
+
         for (let i = 0; i < Engine.objects.length; i++) {
             const gameObject = Engine.objects[i];
             if (gameObject.destroyed)
@@ -65,6 +75,8 @@ class Engine {
             
             gameObject.update();
         }
+        //@ts-ignore
+        draw();
         Input.update();
 
         Renderer.render();
@@ -101,6 +113,24 @@ class GameObject {
         }
     }
 
+    fixedUpdate() {
+        for (const component of this.components) {
+            component.fixedUpdate();
+        }
+    }
+
+    onCollisionEnter(col: Collision) {
+        for (const component of this.components) {
+            component.onCollisionEnter(col);
+        }
+    }
+
+    onCollisionExit(col: Collision) {
+        for (const component of this.components) {
+            component.onCollisionExit(col);
+        }
+    }
+
     addComponent(component: Component) {
         this.components.push(component);
         component.gameObject = this;
@@ -121,6 +151,15 @@ class GameObject {
         for (const component of this.components)
             component.destroyed = true;
     }
+
+    static findObjectsOfType<T extends Component>(type: { new(): T }): Array<T> {
+        let out: Array<T> = [];
+        for (const object of Engine.objects) {
+            let component = object.getComponent(type);
+            if (component) out.push(component);
+        }
+        return out;
+    }
 }
 
 abstract class Component {
@@ -134,5 +173,8 @@ abstract class Component {
 
     start() {}
     update() {}
+    fixedUpdate() {}
     destroy() {}
+    onCollisionEnter(col: Collision) {}
+    onCollisionExit(col: Collision) {}
 }
