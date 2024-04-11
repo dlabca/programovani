@@ -89,7 +89,7 @@ class Rigidbody extends Component {
     shape;
     collisions = new Map();
     currentCollisions = new Map();
-    constructor(mass = 1, bounciness = 0, friction = 0.01) {
+    constructor(mass = 1, bounciness = 0, friction = 0.1) {
         super();
         this.mass = mass;
         this.bounciness = bounciness;
@@ -252,7 +252,7 @@ class Physics {
     static update() {
         for (const rigiA of this.bodies) {
             for (const rigiB of this.bodies) {
-                if (rigiA == rigiB)
+                if (rigiA == rigiB || (!rigiA.enabled || !rigiB.enabled))
                     continue;
                 let col = this.checkCollision(rigiA, rigiB);
                 if (!col)

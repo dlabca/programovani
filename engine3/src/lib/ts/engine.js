@@ -82,13 +82,14 @@ class GameObject {
                 this.components.splice(i--, 1);
                 component.destroy();
             }
-            else
+            else if (component.enabled)
                 component.update();
         }
     }
     fixedUpdate() {
         for (const component of this.components) {
-            component.fixedUpdate();
+            if (component.enabled)
+                component.fixedUpdate();
         }
     }
     onCollisionEnter(col) {
@@ -132,6 +133,7 @@ class GameObject {
 class Component {
     gameObject;
     destroyed = false;
+    enabled = true;
     constructor() { }
     getComponent(type) { return this.gameObject.getComponent(type); }
     start() { }

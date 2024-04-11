@@ -323,7 +323,7 @@ class Physics {
 
         for (const rigiA of this.bodies) {
             for (const rigiB of this.bodies) {
-                if (rigiA == rigiB) continue;
+                if (rigiA == rigiB || (!rigiA.enabled || !rigiB.enabled)) continue;
                 let col = this.checkCollision(rigiA, rigiB);
                 if (!col) continue;
                 

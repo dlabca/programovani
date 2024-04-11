@@ -3,7 +3,8 @@ class Renderer {
     static renderers = [];
     static render() {
         for (const renderer of Renderer.renderers) {
-            renderer.render();
+            if (renderer.enabled)
+                renderer.render();
         }
         Draw.settings.transform.clear();
     }
