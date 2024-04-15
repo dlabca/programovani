@@ -1,0 +1,29 @@
+// Nastavení p5.js
+function setup() {
+  createCanvas(400, 400);
+  background(220);
+}
+
+// Funkce pro vykreslení úhlu
+function draw() {
+  // Nastavení cílového úhlu
+  const targetAngle = random(360);
+
+  // Získání odhadu uživatele
+  const guessAngle = prompt("Hádejte úhel (0-360):", 0);
+
+  // Vyhodnocení odhadu
+  const difference = abs(guessAngle - targetAngle);
+  const message = `Váš odhad byl ${guessAngle}°. Správně je ${targetAngle}°. Minuli jste o ${difference}°.`;
+
+  // Vykreslení textu s výsledkem
+  fill(0);
+  textSize(16);
+  text(message, 10, 20);
+
+  // Vykreslení úhlu
+  stroke(0);
+  strokeWeight(2);
+  line(width / 2, height / 2, width / 2 * cos(radians(guessAngle)), height / 2 * sin(radians(guessAngle)));
+  line(width / 2, height / 2, width / 2 * cos(radians(targetAngle)), height / 2 * sin(radians(targetAngle)));
+}

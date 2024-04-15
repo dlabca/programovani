@@ -1,0 +1,56 @@
+function setup() {
+  createCanvas(400, 400);
+  background(220);
+  rectMode(CORNER);
+}
+
+function draw() {
+  let playing = true;
+
+  while (playing) {
+    // Clear previous content
+    clear();
+
+    // Define prompt and result areas
+    const promptAreaY = height - 50;
+    const resultAreaY = height - 20;
+
+    // Draw prompt area
+    fill(200);
+    rect(0, promptAreaY, width, 50);
+    fill(0);
+    textSize(16);
+    text("Hádejte úhel (0-360):", 10, promptAreaY + 25);
+
+    // Target angle logic
+    const targetAngle = floor(random(360));
+
+    // Draw target angle
+    stroke(255, 0, 0);
+    strokeWeight(3);
+    line(width / 2, height / 2, width / 2 * cos(radians(targetAngle)), height / 2 * sin(radians(targetAngle)));
+
+    // Display target angle value
+    fill(0);
+    textSize(24);
+    text(`Cílový úhel: ${targetAngle}`, 10, 20); // Display target angle above the canvas
+
+    // User input and guess angle logic
+    let guessAngle = parseInt(prompt(" ", 0));
+    const difference = abs(guessAngle - targetAngle);
+
+    // Draw guess angle
+    stroke(0, 0, 255);
+    strokeWeight(2);
+    line(width / 2, height / 2, width / 2 * cos(radians(guessAngle)), height / 2 * sin(radians(guessAngle)));
+
+    // Draw result area
+    fill(200);
+    rect(0, resultAreaY, width, 20);
+    fill(0);
+    text(`Váš odhad: ${guessAngle}°. Správně: ${targetAngle}°. Minuli jste o ${difference}°.`, 10, resultAreaY + 15);
+
+    // Play Again prompt
+    playing = confirm("Chcete hrát znovu?");
+  }
+}
