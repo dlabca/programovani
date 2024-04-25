@@ -57,5 +57,25 @@ namespace WordCounterTests
         public void EmptyString() {
             Base("", 0);
         }
+
+        [TestMethod]
+        public void SingleComma() {
+            Base("This is a , simple text prompt", 6);
+        }
+
+        [TestMethod]
+        public void SinglePeriod() {
+            Base("This . is a simple text prompt", 6);
+        }
+
+        [TestMethod]
+        public void CommaInsteadOfSpace() {
+            Base("Text,prompt", 2);
+        }
+
+        [TestMethod]
+        public void PeriodInsteadOfSpace() {
+            Base("Text.Prompt", 2);
+        }
     }
 }
