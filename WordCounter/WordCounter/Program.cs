@@ -19,7 +19,17 @@
 
         public int CountWords(string text)
         {
-            return 0;
+            int pocetmezer = 0; 
+            int count = 0;
+            for(int i = 0; i < text.Length; i++){
+                if (text[i] is ' '/* or ',' or '.' or '\n' && count != 0*/) {
+                    pocetmezer = 1;
+                }
+            }
+
+
+            return pocetmezer;
         }
+
     }
 }
