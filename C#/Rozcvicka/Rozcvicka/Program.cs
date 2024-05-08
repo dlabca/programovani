@@ -10,10 +10,13 @@
         // Upravte tuto funkci
         public static int NejkratsiVzdalenost(int sirka, int delka, int predni, int zadni)
         {
-            int zleva = 0; // Vypočítejte cestu zleva
-            int zprava = 0; // Vypočítejte cestu zprava
-
-            return 0; // Určete kratší vzdálenost
+            int zleva = predni + delka + zadni; // Vypočítejte cestu zleva
+            int zprava = sirka - predni + delka + sirka - zadni; // Vypočítejte cestu zprava
+            if (zleva > zprava)
+                return zprava; // Určete kratší vzdálenost
+                               // Určete cestu zprava
+            else
+                return zleva; // Určete kratší vzdálenost
         }
 
         // Načítání vstupu

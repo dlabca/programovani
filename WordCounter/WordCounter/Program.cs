@@ -9,7 +9,8 @@
             WordCounter counter = new WordCounter();
             Console.WriteLine("Input text:");
             string? text = Console.ReadLine();
-            if (text == null) {
+            if (text == null)
+            {
                 Console.WriteLine("Error: No text given");
                 return;
             }
@@ -19,16 +20,47 @@
 
         public int CountWords(string text)
         {
-            int pocetmezer = 0; 
-            int count = 0;
-            for(int i = 0; i < text.Length; i++){
-                if (text[i] is ' '/* or ',' or '.' or '\n' && count != 0*/) {
-                    pocetmezer = 1;
+            int pocetSlov = 0;
+            int control = 0;
+            for (int i = 0; i < text.Length; i++)
+            {
+
+                char c = text[i];
+                bool space = text[i] is ' ' or ',' or '.' or '\n';
+
+                if (control == 0)
+                {
+                    if (space)
+                    {
+                        control = 0;
+                    }
+                    else
+                        control = 1;
+                }
+
+                else if (control == 1)
+                {
+                    if (space)
+                    {
+                        control = 0;
+                    }
+                    else
+                        control = 2;
+                    pocetSlov++;
+
+                }
+                else if (control == 2)
+                {
+                    if (space)
+                    {
+                        control = 0;
+                    }
+                    else control = 2;
                 }
             }
 
 
-            return pocetmezer;
+            return pocetSlov;
         }
 
     }

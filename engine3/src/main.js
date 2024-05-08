@@ -138,7 +138,7 @@ function setup() {
             .addComponent(new ShapeRenderer())*/
 }
 function draw() {
-    background(51y);
+    background(51);
     if (camera == true)
         translate(-player.pos.x + width / 2, -player.pos.y + height / 2);
 }
