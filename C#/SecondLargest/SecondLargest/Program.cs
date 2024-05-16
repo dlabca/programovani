@@ -32,8 +32,8 @@ namespace SecondLargest
 
         public static int NthLargest(int[] list, int n)
         {
-
-            return list[n];
+            Heap halda = new Heap();
+            return 0;
         }
     }
 }
