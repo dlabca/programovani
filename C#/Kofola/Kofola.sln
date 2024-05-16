@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34728.123
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kofola", "Kofola\Kofola.csproj", "{7C3A0023-B9F8-421C-AACC-B8B051ACF408}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KofolaTests", "KofolaTests\KofolaTests.csproj", "{4DC1056B-50C3-4D3A-B6A3-166ACB39831E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7C3A0023-B9F8-421C-AACC-B8B051ACF408}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7C3A0023-B9F8-421C-AACC-B8B051ACF408}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7C3A0023-B9F8-421C-AACC-B8B051ACF408}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7C3A0023-B9F8-421C-AACC-B8B051ACF408}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4DC1056B-50C3-4D3A-B6A3-166ACB39831E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4DC1056B-50C3-4D3A-B6A3-166ACB39831E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4DC1056B-50C3-4D3A-B6A3-166ACB39831E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4DC1056B-50C3-4D3A-B6A3-166ACB39831E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {6B3EA6FE-CAFC-4F2D-87FE-07A27BAA5BCC}
+	EndGlobalSection
+EndGlobal
