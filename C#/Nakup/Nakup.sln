@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34728.123
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nakup", "Nakup\Nakup.csproj", "{AC53AC14-5DD4-47EE-8670-7C33008D6246}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NakupTests", "NakupTests\NakupTests.csproj", "{3D43F204-7389-44A3-9AF9-C12ED2440AB7}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{AC53AC14-5DD4-47EE-8670-7C33008D6246}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AC53AC14-5DD4-47EE-8670-7C33008D6246}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AC53AC14-5DD4-47EE-8670-7C33008D6246}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AC53AC14-5DD4-47EE-8670-7C33008D6246}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3D43F204-7389-44A3-9AF9-C12ED2440AB7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3D43F204-7389-44A3-9AF9-C12ED2440AB7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3D43F204-7389-44A3-9AF9-C12ED2440AB7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3D43F204-7389-44A3-9AF9-C12ED2440AB7}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {D7103359-F40B-4FC2-B774-D53C14F396C3}
+	EndGlobalSection
+EndGlobal
