@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace Maze
 {
     class Cell
@@ -16,7 +18,7 @@ namespace Maze
             g.DrawRect(x * size,y * size, 10,10);
         }
         public Cell GetNejghbour(){
-            
+            List<Cell> nejghbour = new();
         }
 
     }
