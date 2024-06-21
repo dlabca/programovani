@@ -1,0 +1,8 @@
+důležité části:
+vytvoření pole(room)
+vykreslení v pravé půlce obrazovky místnostmi s mezerami na jména
+třída room(pozice, typ)
+náhodný umísťovač místností
+uložiště(co může mít jaký typ místnosti)
+třída enemies(umístění, jméno, životy, síla, super Schopnost)
+třida player(jméno, životy, síla, super Schopnost)

@@ -9,9 +9,9 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
-            "program": "${workspaceFolder}/prvni_programC#/EmptyProgram/bin/Debug/net8.0/EmptyProgram.dll",
+            "program": "${workspaceFolder}/GameScreen/bin/Debug/net8.0-windows/GameScreen.dll",
             "args": [],
-            "cwd": "${workspaceFolder}/prvni_programC#/EmptyProgram",
+            "cwd": "${workspaceFolder}/GameScreen",
             "console": "internalConsole",
             "stopAtEntry": false
         },

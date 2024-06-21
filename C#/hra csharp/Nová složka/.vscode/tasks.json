@@ -7,7 +7,7 @@
             "type": "process",
             "args": [
                 "build",
-                "${workspaceFolder}/prvni_programC#/EmptyProgram.sln",
+                "${workspaceFolder}/GameScreen/GameScreen.csproj",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary;ForceNoAlign"
             ],
@@ -19,7 +19,7 @@
             "type": "process",
             "args": [
                 "publish",
-                "${workspaceFolder}/prvni_programC#/EmptyProgram.sln",
+                "${workspaceFolder}/GameScreen/GameScreen.csproj",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary;ForceNoAlign"
             ],
@@ -33,7 +33,7 @@
                 "watch",
                 "run",
                 "--project",
-                "${workspaceFolder}/prvni_programC#/EmptyProgram.sln"
+                "${workspaceFolder}/GameScreen/GameScreen.csproj"
             ],
             "problemMatcher": "$msCompile"
         }

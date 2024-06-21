@@ -1,6 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System.Collections;
+using System.Collections.Generic;
 using System.IO;
 
 namespace Maze
@@ -43,6 +45,25 @@ namespace Maze
                     maze[i,j] = new Cell(maze,i, j);
                 }
             }
+
+
+            Stack<Cell> stack = new();
+            Cell current = maze[0, 0];
+            current.visited = true;
+            stack.Push(current);
+            while (stack.Count > 0)
+            {
+                current = stack.Pop();
+                Cell neighbor = current.GetNejghbour();
+                if (neighbor != null) {
+                    stack.Push(current);
+                    current.BreakWall(neighbor);
+                    neighbor.visited = true;
+                    stack.Push(neighbor);
+                }
+            }
+
+
             base.Initialize();
         }
 
