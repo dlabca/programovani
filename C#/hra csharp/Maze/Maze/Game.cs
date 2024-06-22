@@ -9,7 +9,6 @@ namespace Maze
 {
     public class Game : Microsoft.Xna.Framework.Game
     {
-        public const int CellSize = 20;
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
 
@@ -17,7 +16,6 @@ namespace Maze
 
         int width, height;
         
-        Cell[,] maze;
 
         public Game()
         {
@@ -35,35 +33,6 @@ namespace Maze
 
             width = GraphicsDevice.Viewport.Width;
             height = GraphicsDevice.Viewport.Height;
-
-            maze = new Cell[width / CellSize,height / CellSize];
-
-            for (int i = 0; i < maze.GetLength(0); i++)
-            {
-                for (int j = 0; j < maze.GetLength(1); j++)
-                {
-                    maze[i,j] = new Cell(maze,i, j);
-                }
-            }
-
-
-            Stack<Cell> stack = new();
-            Cell current = maze[0, 0];
-            current.visited = true;
-            stack.Push(current);
-            while (stack.Count > 0)
-            {
-                current = stack.Pop();
-                Cell neighbor = current.GetNejghbour();
-                if (neighbor != null) {
-                    stack.Push(current);
-                    current.BreakWall(neighbor);
-                    neighbor.visited = true;
-                    stack.Push(neighbor);
-                }
-            }
-
-
             base.Initialize();
         }
 
@@ -89,14 +58,6 @@ namespace Maze
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             _spriteBatch.Begin();
-
-            for (int i = 0; i < maze.GetLength(0); i++)
-            {
-                for (int j = 0; j < maze.GetLength(1); j++)
-                {
-                    maze[i,j].Draw(this);
-                }
-            }
 
             _spriteBatch.End();
 
