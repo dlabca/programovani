@@ -1,3 +1,3 @@
 ﻿
-using var game = new Maze.Game();
+using var game = new MyGame.Game();
 game.Run();

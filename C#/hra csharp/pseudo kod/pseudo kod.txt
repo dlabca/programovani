@@ -1,0 +1,9 @@
+inport potřebných knihoven(Microsoft.Xna.Framework;Microsoft.Xna.Framework.Graphics;icrosoft.Xna.Framework.Input;System.Collections;System.Collections.Generic;System.IO;)
+vytvoření obrazovky
+definování funkcí(draw(rect,line,circle),button(x,x,text funkce kterou má spustit po zmáčknutí)
+rozdělení obrazovky na tři části pomocí line
+vytvoření a nakreslení mřížky(4*6) v levé třetině obrazovky
+vytvoření náhodného generátoru který bude definovat jaký typ bude jaká místnost(popřípadě jaký tam bude nepřátel(v bojové areně),brnění a meč v zbrojírně,item(typ lektvar))a kde budou průchody
+zobrazení obrázků místností na dané místa na obrazovce
+vytvoření a nakreslení v prostřední třetině inventáře a automatického aktualizování inventáře,
+vytvoření v pravé třetině ovládací panel a output hry

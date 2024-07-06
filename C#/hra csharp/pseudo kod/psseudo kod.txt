@@ -6,3 +6,4 @@ náhodný umísťovač místností
 uložiště(co může mít jaký typ místnosti)
 třída enemies(umístění, jméno, životy, síla, super Schopnost)
 třida player(jméno, životy, síla, super Schopnost)
+

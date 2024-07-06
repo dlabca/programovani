@@ -5,19 +5,14 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 
-namespace Maze
+namespace MyGame
 {
-    public class Game : Microsoft.Xna.Framework.Game
+    public class Game1 : Game
     {
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
 
-        private Texture2D texture;
-
-        int width, height;
-        
-
-        public Game()
+        public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
@@ -28,11 +23,6 @@ namespace Maze
         {
             // TODO: Add your initialization logic here
 
-            texture = new Texture2D(GraphicsDevice, 1, 1);
-            texture.SetData(new Color[] { Color.White });
-
-            width = GraphicsDevice.Viewport.Width;
-            height = GraphicsDevice.Viewport.Height;
             base.Initialize();
         }
 
@@ -57,16 +47,9 @@ namespace Maze
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            _spriteBatch.Begin();
-
-            _spriteBatch.End();
+            // TODO: Add your drawing code here
 
             base.Draw(gameTime);
-        }
-
-        public void DrawRect(int x, int y, int width, int height)
-        {
-            _spriteBatch.Draw(texture, new Rectangle(x, y, width, height), Color.Black);
         }
     }
 }
