@@ -15,7 +15,18 @@ class ChemickaZkouska
         { "As", "Arzen" },
         { "U", "Uran" },
         { "Zn", "Zinek" },
-        { "Pt", "Platina" }
+        { "Pt", "Platina" },
+        { "I", "Jód" },
+        { "N", "Dusík" },
+        { "Ti", "Titan" },
+        { "S", "Síra" },
+        { "Be", "Beryllium" },
+        { "P", "Fosfor" },
+        { "Ne", "Neon" },
+        { "Al", "Hliník" },
+        { "Fe", "Železo" },
+        { "Cs", "Cesium" }
+
     };
 
     static void Main(string[] args)
