@@ -1,4 +1,4 @@
-﻿
+
 using System;
 using System.Collections.Generic;
 
@@ -47,9 +47,9 @@ class ChemickaZkouska
         for (int i = 0; i < pocetOtazek; i++)
         {
             Console.Clear();  // Vymaže konzoli po každé otázce
-            Console.WriteLine(i + "/" + pocetOtazek);
+            Console.WriteLine($"{i} / {pocetOtazek}");
             if (predchoziOdpoved != "")
-                Console.WriteLine("predchozi odpoved byla " + predchoziOdpoved);
+                Console.WriteLine($"predchozi odpoved byla {predchoziOdpoved}");
             int typOtazky = rnd.Next(2); // 0 = chemická značka -> český název, 1 = český název -> chemická značka
             int index = rnd.Next(prvky.Count);
             KeyValuePair<string, string> prvek = new KeyValuePair<string, string>();
@@ -99,5 +99,7 @@ class ChemickaZkouska
 
         Console.Clear();
         Console.WriteLine($"\nKonec testu. Počet správných odpovědí: {spravne}/{pocetOtazek}.");
+        Console.WriteLine("\nPro ukončení stiskněte libovolnou klávesu ...");
+        Console.ReadKey();
     }
 }
