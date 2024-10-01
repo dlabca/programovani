@@ -1,6 +1,6 @@
-
 using System;
 using System.Collections.Generic;
+using System.IO;
 
 class ChemickaZkouska
 {
@@ -33,12 +33,17 @@ class ChemickaZkouska
         int spravne = 0;
         string predchoziOdpoved = "";
 
+        // Pro ukládání jen špatných odpovědí
+        List<string> spatneOdpovedi = new List<string>();
+
         for (int i = 0; i < pocetOtazek; i++)
         {
             Console.Clear();  // Vymaže konzoli po každé otázce
-            Console.WriteLine($"{i} / {pocetOtazek}");
+            Console.WriteLine($"{i + 1} / {pocetOtazek}");  // Oprava indexu otázky
+
             if (predchoziOdpoved != "")
-                Console.WriteLine($"predchozi odpoved byla {predchoziOdpoved}");
+                Console.WriteLine($"Předchozí odpověď byla {predchoziOdpoved}");
+
             int typOtazky = rnd.Next(2); // 0 = chemická značka -> český název, 1 = český název -> chemická značka
             int index = rnd.Next(prvky.Count);
             KeyValuePair<string, string> prvek = new KeyValuePair<string, string>();
@@ -56,38 +61,68 @@ class ChemickaZkouska
             {
                 Console.Write($"Jaký je český název prvku s chemickou značkou {prvek.Key}? ");
                 string odpoved = Console.ReadLine();
+
                 if (odpoved.Equals(prvek.Value, StringComparison.OrdinalIgnoreCase))
                 {
                     Console.WriteLine("Správně!");
                     spravne++;
-                    predchoziOdpoved = "Spravne!";
+                    predchoziOdpoved = "Správně!";
                 }
                 else
                 {
                     Console.WriteLine($"Špatně. Správná odpověď je {prvek.Value}.");
-                    predchoziOdpoved = "Spatne!";
+                    Console.WriteLine("Pokračujte stiskem libovolné klávesy.");
+                    Console.ReadKey();  // Zastaví kód, aby uživatel viděl správnou odpověď
+                    predchoziOdpoved = "Špatně!";
+                    spatneOdpovedi.Add($"Otázka: Jaký je český název prvku s chemickou značkou {prvek.Key}? Odpověď: {odpoved} - Špatně, správně: {prvek.Value}");
                 }
             }
             else
             {
                 Console.Write($"Jaká je chemická značka pro {prvek.Value}? ");
                 string odpoved = Console.ReadLine();
+
                 if (odpoved.Equals(prvek.Key, StringComparison.OrdinalIgnoreCase))
                 {
                     Console.WriteLine("Správně!");
                     spravne++;
-                    predchoziOdpoved = "Spravne!";
+                    predchoziOdpoved = "Správně!";
                 }
                 else
                 {
                     Console.WriteLine($"Špatně. Správná odpověď je {prvek.Key}.");
-                    predchoziOdpoved = "Spatne!";
+                    Console.WriteLine("Pokračujte stiskem libovolné klávesy.");
+                    Console.ReadKey();  // Umožní uživateli vidět správnou odpověď
+                    predchoziOdpoved = "Špatně!";
+                    spatneOdpovedi.Add($"Otázka: Jaká je chemická značka pro {prvek.Value}? Odpověď: {odpoved} - Špatně, správně: {prvek.Key}");
                 }
             }
         }
 
         Console.Clear();
         Console.WriteLine($"\nKonec testu. Počet správných odpovědí: {spravne}/{pocetOtazek}.");
+
+        // Ukládání pouze špatných odpovědí do souboru
+        if (spatneOdpovedi.Count > 0)
+        {
+            using (StreamWriter sw = new StreamWriter("spatne_odpovedi.txt", true))
+            {
+                sw.WriteLine($"Test ukončen: {DateTime.Now}");
+                sw.WriteLine($"Správné odpovědi: {spravne}/{pocetOtazek}");
+                foreach (var odpoved in spatneOdpovedi)
+                {
+                    sw.WriteLine(odpoved);  // Uložení pouze špatných odpovědí
+                }
+                sw.WriteLine("=========================================");
+            }
+
+            Console.WriteLine("Špatné odpovědi byly uloženy do souboru spatne_odpovedi.txt.");
+        }
+        else
+        {
+            Console.WriteLine("Žádné špatné odpovědi nebyly zaznamenány.");
+        }
+
         Console.WriteLine("\nPro ukončení stiskněte libovolnou klávesu ...");
         Console.ReadKey();
     }
