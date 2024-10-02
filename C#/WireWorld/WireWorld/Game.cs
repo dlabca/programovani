@@ -5,17 +5,34 @@ using Microsoft.Xna.Framework.Input;
 
 namespace WireWorld
 {
+
+    public enum CellType
+    {
+        Empty,
+        Wire,
+        Head,
+        Tail,
+    }
+
     public class Game : Microsoft.Xna.Framework.Game
     {
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
 
         private Texture2D texture;
+        int height = 720;
+        int width = 1280;
+        int cellSize = 20;
+        int gridw, gridh;
 
         CellType[,] cells;
         public Game()
         {
-            _graphics = new GraphicsDeviceManager(this);
+            _graphics = new GraphicsDeviceManager(this)
+            {
+                PreferredBackBufferHeight = 720,
+                PreferredBackBufferWidth = 1280
+            };
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
         }
@@ -26,8 +43,10 @@ namespace WireWorld
             texture.SetData(new Color[] { Color.White });
 
             // TODO: Add your initialization logic here
-            cells = new CellType[40, 24];
-            cells[2,3] = CellType.Head;
+            gridw = width / cellSize;
+            gridh = height / cellSize;
+            cells = new CellType[gridw, gridh];
+            cells[2, 3] = CellType.Head;
 
             base.Initialize();
         }
@@ -45,6 +64,14 @@ namespace WireWorld
                 Exit();
 
             // TODO: Add your update logic here
+            var mouse = Mouse.GetState();
+            (int x, int y) = mouse.Position;
+            
+            int mousecellposx = x / cellSize;
+            int mousecellposy = y / cellSize;
+            if(mouse.LeftButton == ButtonState.Pressed && x < width && y < height && x > 0 && y > 0){
+                cells[mousecellposx, mousecellposy] = CellType.Wire;
+            }
 
             base.Update(gameTime);
         }
@@ -57,11 +84,12 @@ namespace WireWorld
             /*fill = Color.Yellow;
             DrawRect(100, 100, 200, 50);*/
             fill = Color.Blue;
-            for (int y = 0; y < 24; y++)
+            for (int y = 0; y < gridh; y++)
             {
-                for (int x = 0; x < 40; x++)
+                for (int x = 0; x < gridw; x++)
                 {
-                    if(cells[x, y] == CellType.Empty){
+                    if (cells[x, y] == CellType.Empty)
+                    {
                         fill = Color.Blue;
                     }
                     else if (cells[x, y] == CellType.Head)
@@ -76,7 +104,7 @@ namespace WireWorld
                     {
                         fill = Color.Purple;
                     }
-                    DrawRect(x * 20, y * 20, 20, 20);
+                    DrawRect(x * cellSize, y * cellSize, cellSize, cellSize);
                 }
 
             }
