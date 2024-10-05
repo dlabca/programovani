@@ -46,7 +46,6 @@ namespace WireWorld
             gridw = width / cellSize;
             gridh = height / cellSize;
             cells = new CellType[gridw, gridh];
-            cells[2, 3] = CellType.Head;
 
             base.Initialize();
         }
@@ -66,14 +65,61 @@ namespace WireWorld
             // TODO: Add your update logic here
             var mouse = Mouse.GetState();
             (int x, int y) = mouse.Position;
-            
+
             int mousecellposx = x / cellSize;
             int mousecellposy = y / cellSize;
-            if(mouse.LeftButton == ButtonState.Pressed && x < width && y < height && x > 0 && y > 0){
-                cells[mousecellposx, mousecellposy] = CellType.Wire;
+            if (x < width && y < height && x > 0 && y > 0)
+            {
+                if (mouse.LeftButton == ButtonState.Pressed)
+                {
+                    cells[mousecellposx, mousecellposy] = CellType.Wire;
+                }
+                if (mouse.RightButton == ButtonState.Pressed)
+                {
+                    cells[mousecellposx, mousecellposy] = CellType.Head;
+                }
             }
 
+            Rules();
             base.Update(gameTime);
+        }
+
+        void Rules()
+        {
+            CellType[,] nextCells = new CellType[gridw, gridh];
+            for (int x = 0; x < gridw; x++)
+            {
+                for (int y = 0; y < gridh; y++)
+                {
+                    CellType prevCell = cells[x, y];
+                    CellType nextCell = CellType.Empty;
+
+                    if (prevCell == CellType.Head)
+                        nextCell = CellType.Tail;
+                    if (prevCell == CellType.Tail)
+                        nextCell = CellType.Wire;
+                    if (prevCell == CellType.Wire){
+                        nextCell = CellType.Wire;
+                    for (int i = -1; i <= 1; i++)
+                    {
+                        for (int j = -1; j <= 1; j++)
+                        {
+                            int nx = x + i;
+                            nx = (nx + gridw) % gridw;
+                            int ny = y + j;
+                            ny = (ny + gridh) % gridh;
+                            if(cells[nx,ny] == CellType.Head){
+                                nextCell = CellType.Head;
+                            }
+                        }
+                    }
+                    }
+
+                    nextCells[x, y] = nextCell;
+                }
+            }
+
+            cells = nextCells;
         }
 
         protected override void Draw(GameTime gameTime)
