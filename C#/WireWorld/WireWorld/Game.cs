@@ -1,4 +1,6 @@
-﻿using System.Threading;
+﻿using System;
+using System.IO;
+using System.Threading;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -24,6 +26,7 @@ namespace WireWorld
         int width = 1280;
         int cellSize = 20;
         int gridw, gridh;
+        int frame = 0;
 
         CellType[,] cells;
         public Game()
@@ -64,13 +67,55 @@ namespace WireWorld
 
             // TODO: Add your update logic here
             var mouse = Mouse.GetState();
+            var keyboard = Keyboard.GetState();
+
             (int x, int y) = mouse.Position;
 
             int mousecellposx = x / cellSize;
             int mousecellposy = y / cellSize;
+            if (keyboard.IsKeyDown(Keys.S))
+            {
+                Console.WriteLine("Napište jméno soboru do kterého chcete uložit wireworld");
+                string nameS = Console.ReadLine();
+                using (StreamWriter sw = new StreamWriter(nameS, false))
+                {
+                    sw.WriteLine(gridw);
+                    sw.WriteLine(gridh);
+                    for (int swy = 0; swy < gridh; swy++)
+                    {
+                        for (int swx = 0; swx < gridw; swx++)
+                        {
+                            char chr = (char)((int)cells[swx, swy] + '0');
+                            sw.Write(chr);
+                        }
+                    }
+                }
+            }
+            if (keyboard.IsKeyDown(Keys.L))
+            {
+                Console.WriteLine("Zadejte jméno souboru ze kterého chcete nahrát wireworld");
+                string nameL = Console.ReadLine();
+                using (StreamReader sr = new StreamReader(nameL)){
+                    gridw = int.Parse(sr.ReadLine());
+                    gridh = int.Parse(sr.ReadLine());
+
+                    cells = new CellType[gridw, gridh];
+
+                    for (int swy = 0; swy < gridh; swy++)
+                    {
+                        for (int swx = 0; swx < gridw; swx++){
+                            cells[swx, swy] = (CellType)sr.Read();
+                        }
+                    }
+                }
+            }
+            if (keyboard.IsKeyDown(Keys.R))
+            {
+                cells = new CellType[gridw, gridh];
+            }
             if (x < width && y < height && x > 0 && y > 0)
             {
-                if (mouse.LeftButton == ButtonState.Pressed)
+                if (mouse.LeftButton == ButtonState.Pressed && keyboard.IsKeyUp(Keys.LeftControl))
                 {
                     cells[mousecellposx, mousecellposy] = CellType.Wire;
                 }
@@ -78,9 +123,18 @@ namespace WireWorld
                 {
                     cells[mousecellposx, mousecellposy] = CellType.Head;
                 }
-            }
+                if (mouse.LeftButton == ButtonState.Pressed && keyboard.IsKeyDown(Keys.LeftControl))
+                {
+                    cells[mousecellposx, mousecellposy] = CellType.Empty;
+                }
 
-            Rules();
+            }
+            frame++;
+            if (frame >= 60)
+            {
+                frame = 0;
+                Rules();
+            }
             base.Update(gameTime);
         }
 
@@ -98,21 +152,28 @@ namespace WireWorld
                         nextCell = CellType.Tail;
                     if (prevCell == CellType.Tail)
                         nextCell = CellType.Wire;
-                    if (prevCell == CellType.Wire){
-                        nextCell = CellType.Wire;
-                    for (int i = -1; i <= 1; i++)
+                    if (prevCell == CellType.Wire)
                     {
-                        for (int j = -1; j <= 1; j++)
+                        nextCell = CellType.Wire;
+                        int neghbors = 0;
+                        for (int i = -1; i <= 1; i++)
                         {
-                            int nx = x + i;
-                            nx = (nx + gridw) % gridw;
-                            int ny = y + j;
-                            ny = (ny + gridh) % gridh;
-                            if(cells[nx,ny] == CellType.Head){
-                                nextCell = CellType.Head;
+                            for (int j = -1; j <= 1; j++)
+                            {
+                                int nx = x + i;
+                                nx = (nx + gridw) % gridw;
+                                int ny = y + j;
+                                ny = (ny + gridh) % gridh;
+                                if (cells[nx, ny] == CellType.Head)
+                                {
+                                    neghbors++;
+                                }
                             }
                         }
-                    }
+                        if (neghbors == 1 || neghbors == 2)
+                        {
+                            nextCell = CellType.Head;
+                        }
                     }
 
                     nextCells[x, y] = nextCell;
