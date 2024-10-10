@@ -73,7 +73,7 @@ namespace WireWorld
 
             int mousecellposx = x / cellSize;
             int mousecellposy = y / cellSize;
-            if (keyboard.IsKeyDown(Keys.S))
+            if (keyboard.IsKeyDown(Keys.S)) //SAFE
             {
                 Console.WriteLine("Napište jméno soboru do kterého chcete uložit wireworld");
                 string nameS = Console.ReadLine();
@@ -91,7 +91,7 @@ namespace WireWorld
                     }
                 }
             }
-            if (keyboard.IsKeyDown(Keys.L))
+            if (keyboard.IsKeyDown(Keys.L)) //LOAD
             {
                 Console.WriteLine("Zadejte jméno souboru ze kterého chcete nahrát wireworld");
                 string nameL = Console.ReadLine();
@@ -109,7 +109,7 @@ namespace WireWorld
                     }
                 }
             }
-            if (keyboard.IsKeyDown(Keys.R))
+            if (keyboard.IsKeyDown(Keys.R))//RESET
             {
                 cells = new CellType[gridw, gridh];
             }
@@ -168,7 +168,7 @@ namespace WireWorld
                                 {
                                     neghbors++;
                                 }
-                            }
+                            } 
                         }
                         if (neghbors == 1 || neghbors == 2)
                         {
