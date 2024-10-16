@@ -73,7 +73,7 @@ namespace WireWorld
 
             int mousecellposx = x / cellSize;
             int mousecellposy = y / cellSize;
-            if (keyboard.IsKeyDown(Keys.S)) //SAFE
+            if (keyboard.IsKeyDown(Keys.S)) //SAVE
             {
                 Console.WriteLine("Napište jméno soboru do kterého chcete uložit wireworld");
                 string nameS = Console.ReadLine();
@@ -95,7 +95,8 @@ namespace WireWorld
             {
                 Console.WriteLine("Zadejte jméno souboru ze kterého chcete nahrát wireworld");
                 string nameL = Console.ReadLine();
-                using (StreamReader sr = new StreamReader(nameL)){
+                using (StreamReader sr = new StreamReader(nameL))
+                {
                     gridw = int.Parse(sr.ReadLine());
                     gridh = int.Parse(sr.ReadLine());
 
@@ -103,8 +104,9 @@ namespace WireWorld
 
                     for (int swy = 0; swy < gridh; swy++)
                     {
-                        for (int swx = 0; swx < gridw; swx++){
-                            cells[swx, swy] = (CellType)sr.Read();
+                        for (int swx = 0; swx < gridw; swx++)
+                        {
+                            cells[swx, swy] = (CellType)(sr.Read() - '0');
                         }
                     }
                 }
@@ -168,7 +170,7 @@ namespace WireWorld
                                 {
                                     neghbors++;
                                 }
-                            } 
+                            }
                         }
                         if (neghbors == 1 || neghbors == 2)
                         {
@@ -201,7 +203,7 @@ namespace WireWorld
                     }
                     else if (cells[x, y] == CellType.Head)
                     {
-                        fill = Color.Yellow;
+                        fill = Color.GreenYellow;
                     }
                     else if (cells[x, y] == CellType.Wire)
                     {
@@ -209,7 +211,7 @@ namespace WireWorld
                     }
                     else if (cells[x, y] == CellType.Tail)
                     {
-                        fill = Color.Purple;
+                        fill = Color.Yellow;
                     }
                     DrawRect(x * cellSize, y * cellSize, cellSize, cellSize);
                 }

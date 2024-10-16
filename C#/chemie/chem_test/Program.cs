@@ -6,6 +6,26 @@ class ChemickaZkouska
 {
     static Dictionary<string, string> prvky = new Dictionary<string, string>
     {
+        { "He", "Helium" },
+        { "Au", "Zlato" },
+        { "O", "Kyslík" },
+        { "C", "Uhlík" },
+        { "H", "Vodík" },
+        { "Li", "Lithium" },
+        { "As", "Arzen" },
+        { "U", "Uran" },
+        { "Zn", "Zinek" },
+        { "Pt", "Platina" },
+        { "I", "Jód" },
+        { "N", "Dusík" },
+        { "Ti", "Titan" },
+        { "S", "Síra" },
+        { "Be", "Beryllium" },
+        { "P", "Fosfor" },
+        { "Ne", "Neon" },
+        { "Al", "Hliník" },
+        { "Fe", "Železo" },
+        { "Cs", "Cesium" },
         { "Ar", "Argon" },
         { "Ag", "Stříbro" },
         { "V", "Vanad" },
@@ -16,6 +36,7 @@ class ChemickaZkouska
         { "Os", "Osmium" },
         { "Mg", "Hořčík" },
         { "Cu", "Měď" }
+
     };
 
     static void Main(string[] args)

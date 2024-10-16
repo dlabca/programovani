@@ -1,2 +1,2 @@
-﻿using var game = new MyMonoGameProject.Game1();
+﻿using var game = new MyGame.Game1();
 game.Run();

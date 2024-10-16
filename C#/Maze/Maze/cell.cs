@@ -33,12 +33,16 @@ namespace Maze
             List<Cell> nejghbour = new();
             if (x > 0 && !maze[x - 1, y].visited)
                 nejghbour.Add(maze[x - 1, y]);
+
             if (y > 0 && !maze[x, y - 1].visited)
                 nejghbour.Add(maze[x, y - 1]);
+
             if (x < maze.GetLength(0) - 1 && !maze[x + 1, y].visited)
                 nejghbour.Add(maze[x + 1, y]);
+
             if (y < maze.GetLength(1) - 1 && !maze[x, y + 1].visited)
                 nejghbour.Add(maze[x, y + 1]);
+
 
             if (nejghbour.Count == 0)
             {
@@ -64,13 +68,13 @@ namespace Maze
             }
             else if (y - other.y == -1)
             {
-                walls[0] = false;
-                other.walls[2] = false;
+                walls[2] = false;
+                other.walls[0] = false;
             }
             else if (y - other.y == 1)
             {
-                walls[2] = false;
-                other.walls[0] = false;
+                walls[0] = false;
+                other.walls[2] = false;
 
             }
 
