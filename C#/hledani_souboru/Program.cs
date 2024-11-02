@@ -10,7 +10,7 @@ class Program
     static void Main()
     {
         // Pole hledaných výrazů
-        string[] searchTerms = { "Norton","NF",};  // Zadejte více hledaných slov
+        string[] searchTerms = { "dědictvý","rodu","trnhofů"};  // Zadejte více hledaných slov
 
         // Získejte všechny logické disky v systému
         foreach (var drive in DriveInfo.GetDrives())

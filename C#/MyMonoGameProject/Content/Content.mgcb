@@ -13,3 +13,8 @@
 
 #---------------------------------- Content ---------------------------------#
 
+#begin DefaultFont.xnb
+/importer:
+/processor:
+/build:DefaultFont.xnb
+
