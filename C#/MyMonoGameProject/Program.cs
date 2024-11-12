@@ -1,2 +1,2 @@
-﻿using var game = new MyGame.Game1();
+﻿using var game = new mgcb_dungon_clewer.Game1();
 game.Run();

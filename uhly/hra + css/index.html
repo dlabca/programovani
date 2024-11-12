@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <canvas id="defaultCanvas0"></canvas>
+        <span>Jaký rozdíl reálného úhlu a vašeho odhadu menšího úhlu máme brát jako úspěch?:</span>
+        <input type="number" id="ignorovanyrozdil" placeholder="Zadejte rozdíl ve stupních">
+        <span>Zde zadejte váš odhad velikosti úhlu:</span>
+        <input type="number" id="answerInput" placeholder="Zadejte odhad ve stupních">
+        <button onclick="storeAnswer()">Zkontrolovat</button>
+        <button onclick="Pokracovat()">Další</button>
+    </div>
+    <script src="scr/hra.js"></script>
+    <script src="scr/p5.js"></script>
+</body>
+</html>

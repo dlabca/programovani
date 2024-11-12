@@ -8,11 +8,16 @@ public class Game1 : Game
 {
     private GraphicsDeviceManager _graphics;
     private SpriteBatch _spriteBatch;
-    SpriteFont Font;
+        SpriteFont Font;
+
 
     public Game1()
     {
-        _graphics = new GraphicsDeviceManager(this);
+            _graphics = new GraphicsDeviceManager(this)
+            {
+                PreferredBackBufferHeight = 720,
+                PreferredBackBufferWidth = 1280
+            };
         Content.RootDirectory = "Content";
         IsMouseVisible = true;
     }
@@ -20,14 +25,13 @@ public class Game1 : Game
     protected override void Initialize()
     {
         // TODO: Add your initialization logic here
-
         base.Initialize();
     }
 
     protected override void LoadContent()
     {
         _spriteBatch = new SpriteBatch(GraphicsDevice);
-        Font = Content.Load<SpriteFont>("Font");
+        Font = Content.Load<SpriteFont>("Fonts/Font");
 
         // TODO: use this.Content to load your game content here
     }
@@ -35,7 +39,9 @@ public class Game1 : Game
     protected override void Update(GameTime gameTime)
     {
         if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-            Exit();
+           Exit();
+           var mouse = Mouse.GetState();
+           var keyboard = Keyboard.GetState();
 
         // TODO: Add your update logic here
 

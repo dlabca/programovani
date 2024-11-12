@@ -15,7 +15,6 @@ Toto je ukázka **Markdownu**. Níže najdete různé příklady.
 3. Třetí položka
 
 ## Vložený kód
-###### hafo
 Tady je příklad kódu v Pythonu:
 
 ```python

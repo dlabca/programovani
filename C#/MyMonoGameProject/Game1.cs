@@ -2,7 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
-namespace MyGame
+namespace mgcb_dungon_clewer
 {
     public class Game1 : Game
     {

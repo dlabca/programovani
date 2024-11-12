@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Úhlová Hra</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="settings-container" id="settings">
+        <h2>Nastavení</h2>
+        <label>Jaký rozdíl úhlu a vašeho odhadu považujeme za úspěch?</label>
+        <input type="number" id="ignorovanyrozdil" placeholder="Rozdíl ve stupních">
+        <button onclick="startGame()">Začít hru</button>
+    </div>
+    
+    <div class="game-container" id="game">
+        <h1>Uhádněte úhel!</h1>
+        <div class="controls">
+            <label>Váš odhad velikosti úhlu:</label>
+            <input type="number" id="answerInput" placeholder="Odhad ve stupních">
+            <div class="buttons">
+                <button onclick="storeAnswer()">Zkontrolovat</button>
+                <button onclick="Pokracovat()">Další</button>
+            </div>
+        </div>
+        <div id="canvas-container">
+            <canvas id="defaultCanvas0"></canvas>
+        </div>
+        <div id="results">
+            <p id="success-rate">Úspěšnost: 0%</p>
+            <p id="success-count">Úspěchy: 0</p>
+            <p id="failure-count">Neúspěchy: 0</p>
+        </div>
+    </div>
+
+    <div class="settings-icon" onclick="toggleSettings()">
+        ⚙️
+    </div>
+
+    <script src="scr/hra.js"></script>
+    <script src="scr/p5.js"></script>
+</body>
+</html>
