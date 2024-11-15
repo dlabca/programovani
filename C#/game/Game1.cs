@@ -21,6 +21,7 @@ namespace game
         int height = 720;
         int width = 1280;
         int cellSize = 20;
+        int playerSpeed = 2;
         int gridw, gridh;
         CellType[,] cells;
         Vector2 player;
@@ -34,7 +35,11 @@ namespace game
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
         }
-
+        bool overLapRect(float x, float y, float w, float px, float py)
+        {
+            float dist = MathF.Max(MathF.Abs(x - px), MathF.Abs(y - py));
+            return dist < w / 2f;
+        }
         protected override void Initialize()
         {
             texture = new Texture2D(GraphicsDevice, 1, 1);
@@ -65,7 +70,7 @@ namespace game
 
             for (int i = 0; i < 5; i++)
             {
-            Rules();
+                Rules();
             }
 
             base.Initialize();
@@ -84,11 +89,41 @@ namespace game
                 Exit();
 
             // TODO: Add your update logic here
+            var prevPlayer = player;
             var keyboard = Keyboard.GetState();
             if (keyboard.IsKeyDown(Keys.Up))
+            {
+                player.Y -= playerSpeed;
+            }
+            if (keyboard.IsKeyDown(Keys.Down))
+            {
+                player.Y += playerSpeed;
+            }
+            if (keyboard.IsKeyDown(Keys.Left))
+            {
+                player.X -= playerSpeed;
+            }
+            if (keyboard.IsKeyDown(Keys.Right))
+            {
+                player.X += playerSpeed;
+            }
+            int tileX = (int)player.X / cellSize;
+            int tileY = (int)player.Y / cellSize;
+            bool isinCollision = false;
+            for (int i = tileX - 1; i <= tileX + 1; i++)
+            {
+                for (int j = tileY - 1; j <= tileY + 1; j++)
                 {
-                    player.Y -= 2;
+                    if(cells[i,j] == CellType.Empty) continue;
+                    float rectX = i * cellSize + cellSize / 2f;
+                    float rectY = j * cellSize + cellSize / 2f;
+                    float w = cellSize * 2;
+                    isinCollision |= overLapRect(rectX, rectY, w, player.X, player.Y);
+                    if (isinCollision) break;
                 }
+                if (isinCollision) break;
+            }
+            if (isinCollision) player = prevPlayer;
 
 
             base.Update(gameTime);
@@ -114,16 +149,21 @@ namespace game
                             }
                         }
                     }
-                    
-                    if (neighbors >= 5) {
+
+                    if (neighbors >= 5)
+                    {
                         nextCells[Xn, Yn] = CellType.Empty;
-                    }else {
+                    }
+                    else
+                    {
                         nextCells[Xn, Yn] = CellType.Wall;
                     }
                 }
             }
             cells = nextCells;
         }
+
+
         public static Color fill = Color.Black;
         public static Color stroke = Color.Black;
 
@@ -146,16 +186,18 @@ namespace game
                     DrawRect(X * cellSize, Y * cellSize, cellSize, cellSize);
                 }
             }
+            fill = Color.Red;
+            DrawRect(player.X - cellSize / 2, player.Y - cellSize / 2, cellSize, cellSize);
 
 
             // TODO: Add your drawing code here
             _spriteBatch.End();
             base.Draw(gameTime);
         }
-        public void DrawRect(int x, int y, int width, int height)
+        public void DrawRect(float x, float y, int width, int height)
         {
-            _spriteBatch.Draw(texture, new Rectangle(x, y, width, height), stroke);
-            _spriteBatch.Draw(texture, new Rectangle(x + 1, y + 1, width - 2, height - 2), fill);
+            _spriteBatch.Draw(texture, new Rectangle((int)x, (int)y, width, height), stroke);
+            _spriteBatch.Draw(texture, new Rectangle((int)x + 1, (int)y + 1, width - 2, height - 2), fill);
         }
     }
 }

@@ -56,7 +56,7 @@ namespace DungeonCrawler
 			room5.SetExits(null, room6, room4, null);
 			room6.SetExits(room5, null, null, null);
 			currentRoom = room1;
-            
+
 			// Pridani nepratel
 			room2.AddEnemy(new Enemy("Goblin", 30, 10));
 			room3.AddEnemy(new Enemy("Troll", 50, 20));
@@ -95,11 +95,11 @@ namespace DungeonCrawler
 					Console.WriteLine(currentRoom.Description);
 					if (currentRoom.Enemy != null)
 					{
-                        foreach (var enemy in currentRoom.Enemy)
-                        {
-                            
-    						Console.WriteLine($"Zde je nepritel: {enemy.Name}");
-                        }
+						foreach (var enemy in currentRoom.Enemy)
+						{
+
+							Console.WriteLine($"Zde je nepritel: {enemy.Name}");
+						}
 					}
 					foreach (var item in currentRoom.Items)
 					{
@@ -154,11 +154,11 @@ namespace DungeonCrawler
 				Console.WriteLine(currentRoom.Description);
 				if (currentRoom.Enemy != null)
 				{
-                    foreach (var enemy in currentRoom.Enemy)
-                    {
-    					Console.WriteLine($"Zde je nepritel: {enemy.Name}");
-                        
-                    }
+					foreach (var enemy in currentRoom.Enemy)
+					{
+						Console.WriteLine($"Zde je nepritel: {enemy.Name}");
+
+					}
 				}
 			}
 			else
@@ -227,6 +227,11 @@ namespace DungeonCrawler
 		private void UseItem(string itemName)
 		{
 			Item item = player.FindItem(itemName);
+			if (item == null)
+			{
+				Console.WriteLine($"Nemate {itemName} ve svem inventari.");
+				return;
+			}
 			string[] parts = item.Name.Split(' ');
 			if (item != null)
 			{
@@ -272,8 +277,9 @@ namespace DungeonCrawler
 			public Room South { get; private set; }
 			public Room East { get; private set; }
 			public Room West { get; private set; }
-			public List<Enemy> Enemy { get; private set; } = [];
-			public List<Item> Items { get; private set; } = [];
+			public List<Enemy> Enemy { get; private set; } = new List<Enemy>();
+			public List<Item> Items { get; private set; } = new List<Item>();
+
 
 			public Room(string name, string description)
 			{
@@ -318,7 +324,7 @@ namespace DungeonCrawler
 					return 10;
 				}
 			}
-			
+
 			public string Name { get; private set; }
 			public int Health { get; private set; }
 			private List<Item> inventory;
@@ -385,7 +391,8 @@ namespace DungeonCrawler
 			public Enemy(string name, int health, int attackPower)
 			{
 				Name = name;
-				Health = health; this.attackPower = attackPower;
+				Health = health;
+				this.attackPower = attackPower;
 			}
 			public void Attack(Player player)
 			{
@@ -406,8 +413,7 @@ namespace DungeonCrawler
 			public int Value { get; private set; }
 			public int Value2 { get; private set; }
 
-			public Item(string name, int value, int value2 = 0
-			)
+			public Item(string name, int value, int value2 = 0)
 			{
 				Name = name;
 				Value = value;
