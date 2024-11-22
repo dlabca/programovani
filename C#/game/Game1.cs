@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Xml.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -35,10 +36,33 @@ namespace game
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
         }
-        bool overLapRect(float x, float y, float w, float px, float py)
+        struct RectHit
         {
-            float dist = MathF.Max(MathF.Abs(x - px), MathF.Abs(y - py));
-            return dist < w / 2f;
+            public Vector2 normal;
+            public float depth;
+        }
+        RectHit? overLapRect(float x, float y, float w, float px, float py)
+        {
+            RectHit hit;
+            float dx = MathF.Abs(x - px);
+            float dy = MathF.Abs(y - py);
+            float dist = MathF.Max(dx, dy);
+            hit.depth = w / 2f - dist;
+            if (dist == dx) hit.normal = new Vector2(1, 0);
+            else hit.normal = new Vector2(0, 1);
+
+            hit.normal.X *= MathF.Sign(x - px);
+            hit.normal.Y *= MathF.Sign(y - py);
+
+            if (dist < w / 2)
+            {
+                return hit;
+            }
+            else
+            {
+                return null;
+            }
+
         }
         protected override void Initialize()
         {
@@ -82,49 +106,63 @@ namespace game
 
             // TODO: use this.Content to load your game content here
         }
-
+        List<(int, int)> neitghborDirs = new List<(int, int)>
+                {
+                    (0,1),
+                    (0,-1),
+                    (1,0),
+                    (-1,0),
+                    (1,1),
+                    (-1,-1),
+                    (1,-1),
+                    (-1,1)
+                };
         protected override void Update(GameTime gameTime)
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
             // TODO: Add your update logic here
-            var prevPlayer = player;
             var keyboard = Keyboard.GetState();
+            Vector2 move = new Vector2();
             if (keyboard.IsKeyDown(Keys.Up))
             {
-                player.Y -= playerSpeed;
+                move.Y -= playerSpeed;
             }
             if (keyboard.IsKeyDown(Keys.Down))
             {
-                player.Y += playerSpeed;
+                move.Y += playerSpeed;
             }
             if (keyboard.IsKeyDown(Keys.Left))
             {
-                player.X -= playerSpeed;
+                move.X -= playerSpeed;
             }
             if (keyboard.IsKeyDown(Keys.Right))
             {
-                player.X += playerSpeed;
+                move.X += playerSpeed;
             }
             int tileX = (int)player.X / cellSize;
             int tileY = (int)player.Y / cellSize;
-            bool isinCollision = false;
-            for (int i = tileX - 1; i <= tileX + 1; i++)
+            foreach ((int dx, int dy) in neitghborDirs)
             {
-                for (int j = tileY - 1; j <= tileY + 1; j++)
-                {
-                    if(cells[i,j] == CellType.Empty) continue;
-                    float rectX = i * cellSize + cellSize / 2f;
-                    float rectY = j * cellSize + cellSize / 2f;
-                    float w = cellSize * 2;
-                    isinCollision |= overLapRect(rectX, rectY, w, player.X, player.Y);
-                    if (isinCollision) break;
-                }
-                if (isinCollision) break;
-            }
-            if (isinCollision) player = prevPlayer;
+                int i = tileX + dx;
+                int j = tileY + dy;
+                if (cells[i, j] == CellType.Empty) continue;
+                float rectX = i * cellSize + cellSize / 2f;
+                float rectY = j * cellSize + cellSize / 2f;
+                float w = cellSize * 2;
 
+                Vector2 nextPos = player + move;
+
+                var collision = overLapRect(rectX, rectY, w, nextPos.X, nextPos.Y);
+
+                if (collision is RectHit hit)
+                {
+                    move -= hit.normal * hit.depth;
+                }
+            }
+
+            player += move;
 
             base.Update(gameTime);
         }
@@ -196,8 +234,8 @@ namespace game
         }
         public void DrawRect(float x, float y, int width, int height)
         {
-            _spriteBatch.Draw(texture, new Rectangle((int)x, (int)y, width, height), stroke);
-            _spriteBatch.Draw(texture, new Rectangle((int)x + 1, (int)y + 1, width - 2, height - 2), fill);
+            //_spriteBatch.Draw(texture, new Rectangle((int)x, (int)y, width, height), stroke);
+            _spriteBatch.Draw(texture, new Rectangle((int)x, (int)y, width, height), fill);
         }
     }
 }

@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zobrazení textu a obrázků</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            text-align: center;
+            padding: 20px;
+        }
+        input[type="text"] {
+            padding: 10px;
+            font-size: 16px;
+            width: 300px;
+            margin-bottom: 20px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .output {
+            margin-top: 20px;
+            font-size: 18px;
+            color: #333;
+        }
+        .output img {
+            max-width: 100%;
+            height: auto;
+            margin-top: 10px;
+        }
+        .output p {
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Zadejte kód pro zjištění dalších postupů</h1>
+    <!-- <p>Zadejte název položky (např. <code>obrazek1</code> nebo <code>zprava1</code>) a klikněte na tlačítko:</p> -->
+    <input type="text" id="textInput" placeholder="Zadejte název položky">
+    <button onclick="processInput()">Zobrazit postup</button>
+
+    <div class="output" id="output"></div>
+
+    <script>
+        function processInput() {
+            const input = document.getElementById("textInput").value.trim().toLowerCase();
+            const outputDiv = document.getElementById("output");
+
+            // Definice položek (obrázky a text)
+            const items = {
+                "obrazek1": { 
+                    image: "obrazky/obrazek1.jpg", 
+                    text: "Toto je obrázek č. 1." 
+                },
+                "obrazek2": { 
+                    image: "obrazky/obrazek2.jpg", 
+                    text: "Toto je obrázek č. 2." 
+                },
+                "zprava1": { 
+                    text: "Toto je jednoduchá textová zpráva bez obrázku." 
+                },
+                "zprava2": { 
+                    text: "Další textová zpráva, která může být užitečná." 
+                }
+            };
+
+            // Zobrazení položky
+            if (items[input]) {
+                const item = items[input];
+                outputDiv.innerHTML = `
+                    ${item.text ? `<p>${item.text}</p>` : ""}
+                    ${item.image ? `<img src="${item.image}" alt="Obrázek ${input}">` : ""}
+                `;
+            } else if (input) {
+                outputDiv.innerHTML = `<p style="color: red;">Položka <strong>${input}</strong> nebyla nalezena.</p>`;
+            } else {
+                outputDiv.innerHTML = `<p style="color: red;">Prosím, zadejte platný název položky!</p>`;
+            }
+        }
+    </script>
+</body>
+</html>

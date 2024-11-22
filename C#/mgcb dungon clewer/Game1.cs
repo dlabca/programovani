@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Security.Cryptography.X509Certificates;
+
 
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -16,17 +16,21 @@ namespace mgcb_dungon_clewer
         private Texture2D texture;
         Texture2D pixel;
         SpriteFont Font;
-        int height = 720;
-        int width = 1280;
         private Button myButton;
         bool mapa_zobrazena;
         public static int mapCellSize;
+        int prevousheight;
+        int prevouswidth;
+        int heigth = 720;
+        int width = 1280;
+        float pomer = 16f / 9f;
+
 
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this)
             {
-                PreferredBackBufferHeight = height,
+                PreferredBackBufferHeight = heigth,
                 PreferredBackBufferWidth = width
             };
             Content.RootDirectory = "Content";
@@ -59,20 +63,66 @@ namespace mgcb_dungon_clewer
 
         protected override void Update(GameTime gameTime)
         {
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
+            var keyboard = Keyboard.GetState();
+            var mouse = Mouse.GetState();
+
+            // Zavření hry
+            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || keyboard.IsKeyDown(Keys.Escape))
                 Exit();
 
-            // TODO: Add your update logic here
-            if (myButton.IsClicked())
+            // Přepínání fullscreen režimu pomocí klávesy F11
+            if (keyboard.IsKeyDown(Keys.F11) && !_graphics.IsFullScreen)
             {
-                // Akce po kliknutí
-                mapa_zobrazena = true;
+                _graphics.IsFullScreen = true;
+                _graphics.ApplyChanges();
+            }
+            else if (keyboard.IsKeyDown(Keys.F11) && _graphics.IsFullScreen)
+            {
+                _graphics.IsFullScreen = false;
+                _graphics.PreferredBackBufferWidth = width;
+                _graphics.PreferredBackBufferHeight = heigth;
+                _graphics.ApplyChanges();
             }
 
+            // Pokud není fullscreen, přizpůsobuje velikost podle poměru stran
+            if (!_graphics.IsFullScreen)
+            {
+                heigth = Window.ClientBounds.Height;
+                width = Window.ClientBounds.Width;
+
+                if (heigth != prevousheight)
+                {
+                    width = (int)(heigth * pomer);
+                    _graphics.PreferredBackBufferHeight = heigth;
+                    _graphics.PreferredBackBufferWidth = width;
+                    prevousheight = heigth;
+                }
+                else if (width != prevouswidth)
+                {
+                    heigth = (int)(width / pomer);
+                    _graphics.PreferredBackBufferWidth = width;
+                    _graphics.PreferredBackBufferHeight = heigth;
+                    prevouswidth = width;
+                }
+
+                // Pouze jednou použijeme ApplyChanges po úpravách
+                if (heigth != prevousheight || width != prevouswidth)
+                {
+                    _graphics.ApplyChanges();
+                }
+            }
+
+            // Kliknutí na tlačítko
+            if (myButton.IsClicked())
+            {
+                mapa_zobrazena = !mapa_zobrazena;
+            }
 
             base.Update(gameTime);
         }
-        
+
+
+
 
         protected override void Draw(GameTime gameTime)
         {
@@ -81,16 +131,17 @@ namespace mgcb_dungon_clewer
             _spriteBatch.Begin();
             // TODO: Add your drawing code here
 
-            DrawLine(_spriteBatch, new Vector2(width / 3, 0), new Vector2(width / 3, height), Color.Black, 1f);
-            DrawLine(_spriteBatch, new Vector2(2 * width / 3, 0), new Vector2(2 * width / 3, height), Color.Black, 1f);
-            fill = Color.Blue;
+            //  DrawLine(_spriteBatch, new Vector2(width / 3, 0), new Vector2(width / 3, heigth), Color.Black, 1f);
+            //DrawLine(_spriteBatch, new Vector2(2 * width / 3, 0), new Vector2(2 * width / 3, heigth), Color.Black, 1f);
             if (mapa_zobrazena == true)
             {
+                fill = Color.Blue;
+
                 for (int i = 0; i < width / 100; i++)
                 {
-                    for (int j = 0; j < height / 100; j++)
+                    for (int j = 0; j < heigth / 100; j++)
                     {
-                        DrawRect(i * 100, j * 100, 100, 100);
+                        DrawRect(i * 100, j * 100, 100, 100, stroke, fill);
                     }
                 }
             }
@@ -105,10 +156,10 @@ namespace mgcb_dungon_clewer
 
         public static Color fill = Color.Black;
         public static Color stroke = Color.Black;
-        public void DrawRect(int x, int y, int width, int height)
+        public void DrawRect(int x, int y, int width, int height, Color stroke, Color fill)
         {
-            _spriteBatch.Draw(texture, new Rectangle(x, y, width, height), stroke);
-            _spriteBatch.Draw(texture, new Rectangle(x + 1, y + 1, width - 2, height - 2), fill);
+            _spriteBatch.Draw(texture, new Rectangle(x, y, width, height), stroke); // Vnější rámeček
+            _spriteBatch.Draw(texture, new Rectangle(x + 1, y + 1, width - 2, height - 2), fill); // Výplň
         }
         public void DrawLine(SpriteBatch spriteBatch, Vector2 start, Vector2 end, Color color, float thickness)
         {
