@@ -47,9 +47,9 @@ namespace Dino
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
 
-            _spriteBatch.Begin();
+            _spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp);
 
-            Drawing.Draw(Sprite.Ground, Vector2.Zero);
+            Drawing.Draw(Sprite.Dino, Vector2.Zero, 3);
 
             _spriteBatch.End();
 

@@ -49,9 +49,10 @@ namespace Dino
             Drawing.sprite = sprite;
         }
 
-        public static void Draw(Sprite sprite, Vector2 position)
+        public static void Draw(Sprite sprite, Vector2 position, float scale = 1)
         {
-            spriteBatch.Draw(Drawing.sprite, position, sprites[sprite], Color.White);
+            Rectangle rect = sprites[sprite];
+            spriteBatch.Draw(Drawing.sprite, new Rectangle((int)position.X, (int)position.Y, (int)(rect.Width * scale), (int)(rect.Height * scale)), rect, Color.White);
         }
     }
 }
