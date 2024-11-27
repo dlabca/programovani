@@ -9,6 +9,8 @@ namespace Dino
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
 
+        Texture2D sprite;
+
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
@@ -18,14 +20,14 @@ namespace Dino
 
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
-
             base.Initialize();
         }
 
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
+
+            Drawing.Initialize(_spriteBatch, Content.Load<Texture2D>("sprite"));
 
             // TODO: use this.Content to load your game content here
         }
@@ -44,7 +46,12 @@ namespace Dino
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            // TODO: Add your drawing code here
+
+            _spriteBatch.Begin();
+
+            Drawing.Draw(Sprite.Ground, Vector2.Zero);
+
+            _spriteBatch.End();
 
             base.Draw(gameTime);
         }
