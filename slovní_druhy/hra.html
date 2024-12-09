@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="cs">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Procvičování slovních druhů</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f9f9f9;
+            color: #333;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .word {
+            font-size: 24px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        button {
+            padding: 10px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        button:hover {
+            background: #ddd;
+        }
+
+        .result {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 18px;
+        }
+
+        .success {
+            color: green;
+        }
+
+        .error {
+            color: red;
+        }
+
+        .manage-section {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .input-group {
+            margin: 10px 0;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        input,
+        select {
+            padding: 10px;
+            font-size: 14px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Procvičování slovních druhů</h1>
+        </div>
+        <div class="word" id="current-word">Slovo se načítá...</div>
+        <div class="buttons" id="buttons"></div>
+        <div class="result" id="result"></div>
+        <div class="manage-section">
+            <button id="toggle-manage" onclick="toggleManage()">Správa slov</button>
+            <button id="download" onclick="downloadWords()">Stáhnout slova</button>
+            <input type="file" id="file-input" accept=".json" onchange="loadWordsFromFile(event)" />
+            <div id="manage-panel" class="hidden">
+                <div id="password-prompt">
+                    <input type="password" id="password" placeholder="Zadejte heslo">
+                    <button onclick="verifyPassword()">Potvrdit</button>
+                </div>
+                <div id="word-management" class="hidden">
+                    <div class="input-group">
+                        <input type="text" id="new-word" placeholder="Nové slovo">
+                        <select id="word-type">
+                            <option value="podstatné jméno">Podstatné jméno</option>
+                            <option value="přídavné jméno">Přídavné jméno</option>
+                            <option value="zájmeno">Zájmeno</option>
+                            <option value="číslovka">Číslovka</option>
+                            <option value="sloveso">Sloveso</option>
+                            <option value="příslovce">Příslovce</option>
+                            <option value="předložka">Předložka</option>
+                            <option value="spojka">Spojka</option>
+                            <option value="částice">Částice</option>
+                            <option value="citoslovce">Citoslovce</option>
+                        </select>
+                        <button onclick="addWord()">Přidat</button>
+                    </div>
+                    <ul id="word-list"></ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const heslo = "tajneheslo"; // Nastavte své heslo
+        let slova = [
+            {
+                "slovo": "na",
+                "druh": "předložka"
+            },
+            {
+                "slovo": "ale",
+                "druh": "spojka"
+            },
+            {
+                "slovo": "že",
+                "druh": "spojka"
+            },
+            {
+                "slovo": "do",
+                "druh": "předložka"
+            },
+            {
+                "slovo": "a",
+                "druh": "spojka"
+            },
+            {
+                "slovo": "k",
+                "druh": "předložka"
+            },
+            {
+                "slovo": "nad",
+                "druh": "předložka"
+            },
+            {
+                "slovo": "abys",
+                "druh": "spojka"
+            },
+            {
+                "slovo": "za",
+                "druh": "předložka"
+            },
+            {
+                "slovo": "když",
+                "druh": "spojka"
+            },
+            {
+                "slovo": "protože",
+                "druh": "spojka"
+            },
+            {
+                "slovo": "u",
+                "druh": "předložka"
+            },
+            {
+                "slovo": "i",
+                "druh": "spojka"
+            },
+            {
+                "slovo": "ani",
+                "druh": "spojka"
+            },
+            {
+                "slovo": "v",
+                "druh": "předložka"
+            },
+            {
+                "slovo": "podle",
+                "druh": "předložka"
+            },
+            {
+                "slovo": "před",
+                "druh": "předložka"
+            },
+            {
+                "slovo": "o",
+                "druh": "předložka"
+            }
+
+        ];
+
+        const wordElement = document.getElementById("current-word");
+        const buttonsContainer = document.getElementById("buttons");
+        const resultElement = document.getElementById("result");
+        const managePanel = document.getElementById("manage-panel");
+        const passwordPrompt = document.getElementById("password-prompt");
+        const wordManagement = document.getElementById("word-management");
+        const downloadButton = document.getElementById("download");
+        const fileInput = document.getElementById("file-input");
+        let currentWordIndex = 0;
+
+        function toggleManage() {
+            managePanel.classList.toggle("hidden");
+        }
+
+        function verifyPassword() {
+            const password = document.getElementById("password").value;
+            if (password === heslo) {
+                passwordPrompt.classList.add("hidden");
+                wordManagement.classList.remove("hidden");
+            } else {
+                alert("Nesprávné heslo!");
+            }
+        }
+
+        function addWord() {
+            const newWord = document.getElementById("new-word").value.trim();
+            const wordType = document.getElementById("word-type").value;
+            if (!newWord) return alert("Zadejte slovo!");
+            slova.push({ slovo: newWord, druh: wordType });
+            updateWordList();
+            document.getElementById("new-word").value = "";
+        }
+
+        function updateWordList() {
+            const wordListEl = document.getElementById("word-list");
+            wordListEl.innerHTML = slova.map((w, i) =>
+                `<li>${w.slovo} (${w.druh}) <button onclick="removeWord(${i})">Odebrat</button></li>`
+            ).join("");
+        }
+
+        function removeWord(index) {
+            slova.splice(index, 1);
+            updateWordList();
+        }
+
+        let allWordTypes = [
+            "podstatné jméno", "přídavné jméno", "zájmeno", "číslovka",
+            "sloveso", "příslovce", "předložka", "spojka",
+            "částice", "citoslovce"
+        ];
+
+        function loadWord() {
+            if (slova.length === 0) {
+                wordElement.textContent = "Žádná slova nejsou k dispozici.";
+                buttonsContainer.innerHTML = "";
+                return;
+            }
+
+            currentWordIndex = Math.floor(Math.random() * slova.length);
+            wordElement.textContent = slova[currentWordIndex].slovo;
+
+            // Generování tlačítek pro všechny druhy slov bez opakování
+            buttonsContainer.innerHTML = allWordTypes.map(wordType =>
+                `<button onclick="checkAnswer('${wordType}')">${wordType}</button>`
+            ).join("");
+        }
+
+        function checkAnswer(answer) {
+            if (slova[currentWordIndex].druh === answer) {
+                resultElement.textContent = "Správně!";
+                resultElement.className = "result success";
+            } else {
+                resultElement.textContent = "Špatně!";
+                resultElement.className = "result error";
+            }
+            loadWord();
+        }
+
+        function downloadWords() {
+            const blob = new Blob([JSON.stringify(slova, null, 2)], { type: "application/json" });
+            const link = document.createElement("a");
+            link.href = URL.createObjectURL(blob);
+            link.download = "slova.json";
+            link.click();
+        }
+
+        function loadWordsFromFile(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                try {
+                    const data = JSON.parse(e.target.result);
+                    if (Array.isArray(data)) {
+                        slova = data;
+                        updateWordList();
+                        loadWord();
+                    } else {
+                        alert("Soubor neobsahuje platná data!");
+                    }
+                } catch (error) {
+                    alert("Chyba při načítání souboru: " + error.message);
+                }
+            };
+            reader.readAsText(file);
+        }
+
+        loadWord();
+        updateWordList();
+    </script>
+</body>
+
+</html>

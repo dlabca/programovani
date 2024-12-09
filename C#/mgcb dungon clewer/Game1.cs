@@ -141,7 +141,7 @@ namespace mgcb_dungon_clewer
                 {
                     for (int j = 0; j < heigth / 100; j++)
                     {
-                        DrawRect(i * 100, j * 100, 100, 100, stroke, fill);
+                        DrawRect(i * 100, j * 1300, 100, 100, stroke, fill);
                     }
                 }
             }

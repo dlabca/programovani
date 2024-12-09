@@ -7,7 +7,7 @@
             "type": "process",
             "args": [
                 "build",
-                "${workspaceFolder}/bojovka24changermgcb.csproj",
+                "${workspaceFolder}/kalkulačka.csproj",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary;ForceNoAlign"
             ],
@@ -19,7 +19,7 @@
             "type": "process",
             "args": [
                 "publish",
-                "${workspaceFolder}/bojovka24changermgcb.csproj",
+                "${workspaceFolder}/kalkulačka.csproj",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary;ForceNoAlign"
             ],
@@ -33,7 +33,7 @@
                 "watch",
                 "run",
                 "--project",
-                "${workspaceFolder}/bojovka24changermgcb.csproj"
+                "${workspaceFolder}/kalkulačka.csproj"
             ],
             "problemMatcher": "$msCompile"
         }

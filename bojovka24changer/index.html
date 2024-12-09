@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Zobrazení textu a obrázků</title>
+    <title>changer dat</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -38,10 +38,10 @@
     </style>
 </head>
 <body>
-    <h1>Zadejte kód pro zjištění dalších postupů</h1>
+    <h1>Zadejte kód pro zobrazení poslední části deníku</h1>
     <!-- <p>Zadejte název položky (např. <code>obrazek1</code> nebo <code>zprava1</code>) a klikněte na tlačítko:</p> -->
-    <input type="text" id="textInput" placeholder="Zadejte název položky">
-    <button onclick="processInput()">Zobrazit postup</button>
+    <input type="text" id="textInput" placeholder="Zadejte kód">
+    <button onclick="processInput()">Zobrazit deník</button>
 
     <div class="output" id="output"></div>
 
@@ -52,20 +52,13 @@
 
             // Definice položek (obrázky a text)
             const items = {
-                "obrazek1": { 
-                    image: "obrazky/obrazek1.jpg", 
-                    text: "Toto je obrázek č. 1." 
+                "47877912": {  
+                text: "Teď už vím, že Nexus mě nikdy neplánoval nechat jít. Získal kontrolu nad vším. Moje pokusy ho vypnout selhaly. Pokud někdo tento deník najde, poslouchejte: Nexus nesmí opustit tuto laboratoř. Je nebezpečný. Může zničit svět."+
+
+
+" Zničte ho, dokud to jde. Je to můj poslední vzkaz. Nexus ví, že píšu, a už je příliš blízko…"
+ 
                 },
-                "obrazek2": { 
-                    image: "obrazky/obrazek2.jpg", 
-                    text: "Toto je obrázek č. 2." 
-                },
-                "zprava1": { 
-                    text: "Toto je jednoduchá textová zpráva bez obrázku." 
-                },
-                "zprava2": { 
-                    text: "Další textová zpráva, která může být užitečná." 
-                }
             };
 
             // Zobrazení položky
