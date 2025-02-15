@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System.Security.Cryptography.X509Certificates;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
@@ -10,8 +11,18 @@ public class Game1 : Game
     private SpriteBatch _spriteBatch;
     private Texture2D _buttonTexture;
     private SpriteFont _font;
-    private Button _button;
-    int height,width;
+    int height, width;
+    Button[,] buttons = new Button[4, 4];
+    string[,] buttonLabels = new string[,]
+    {
+        { "7", "8", "9", "/" },
+        { "4", "5", "6", "*" },
+        { "1", "2", "3", "-" },
+        { "0", ",", "=", "+" }
+    };
+    int buttonWidth;
+    int buttonHeight;
+
 
     public Game1()
     {
@@ -27,36 +38,57 @@ public class Game1 : Game
 
         base.Initialize();
     }
-
     protected override void LoadContent()
     {
         _spriteBatch = new SpriteBatch(GraphicsDevice);
 
-        // Načtení textury a písma
         _buttonTexture = new Texture2D(GraphicsDevice, 1, 1);
-        _buttonTexture.SetData(new[] { Color.White }); // Jednoduchá bílá textura pro tlačítko
+        _buttonTexture.SetData(new[] { Color.White }); // Jednoduchá bílá textura pro tlačítka
+        height = GraphicsDevice.Viewport.Height;
+        width = GraphicsDevice.Viewport.Width;
 
-        _font = Content.Load<SpriteFont>("Fonts/File"); // Nahraď za název svého fontu
+        _font = Content.Load<SpriteFont>("Fonts/File");
+        buttonWidth = width / 4;
+        buttonHeight = height / 3 * 2 / 4;
 
-        // Vytvoření tlačítka
-        _button = new Button(_buttonTexture, _font, new Rectangle(200, 150, 200, 50), "Klikni mě", Color.Blue, Color.White);
+
+
+
+        for (int row = 0; row < 4; row++)
+        {
+            for (int col = 0; col < 4; col++)
+            {
+                int x = col * buttonWidth; // Vzdálenost mezi tlačítky
+                int y = row * buttonHeight + height / 3;
+                buttons[row, col] = new Button(_buttonTexture, _font, new Rectangle(x, y, buttonWidth, buttonHeight), buttonLabels[row, col], Color.Blue, Color.White);
+            }
+        }
     }
+
+
 
     protected override void Update(GameTime gameTime)
     {
         if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
             Exit();
-        
+
 
         // TODO: Add your update logic here
-        if (_button.IsClicked())
-        {
 
-        }
         if (height != GraphicsDevice.Viewport.Height || width != GraphicsDevice.Viewport.Width)
         {
             height = GraphicsDevice.Viewport.Height;
             width = GraphicsDevice.Viewport.Width;
+            for (int row = 0; row < 4; row++)
+            {
+                for (int col = 0; col < 4; col++)
+                {
+                    int x = col * buttonWidth; // Vzdálenost mezi tlačítky
+                    int y = row * buttonHeight + height / 3;
+                    buttons[row, col] = new Button(_buttonTexture, _font, new Rectangle(x, y, buttonWidth, buttonHeight), buttonLabels[row, col], Color.Blue, Color.White);
+                }
+            }
+
         }
 
         base.Update(gameTime);
@@ -66,7 +98,13 @@ public class Game1 : Game
     {
         GraphicsDevice.Clear(Color.CornflowerBlue);
         _spriteBatch.Begin();
-        _button.Draw(_spriteBatch);
+        for (int i = 0; i < 4; i++)
+        {
+            for (int j = 0; j < 4; j++)
+            {
+                buttons[i, j].Draw(_spriteBatch);
+            }
+        }
 
         // TODO: Add your drawing code here
         _spriteBatch.End();

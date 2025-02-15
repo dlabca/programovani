@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -14,8 +15,9 @@ namespace Dino
         Texture2D tex;
         float posY = 0;
         float velY;
-        float jumpForce = 1000;
+        float jumpForce = 1200;
         float gravity = 70;
+        bool dead;
         List<Cactus> cacti = new List<Cactus>();
         public Game1()
         {
@@ -45,6 +47,13 @@ namespace Dino
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
+            foreach (Cactus cactus in cacti)
+            {
+                if (OverlapRects())
+                {
+                    dead = true;
+                }
+            }
 
             // TODO: Add your update logic here
             float delta = gameTime.ElapsedGameTime.Milliseconds / 1000f;
@@ -61,7 +70,7 @@ namespace Dino
             }
             foreach (Cactus cactus in cacti)
             {
-                cactus.Update();
+                cactus.Update(delta);
             }
 
             base.Update(gameTime);
@@ -89,6 +98,16 @@ namespace Dino
         public void DrawRect(float x, float y, float width, float height, Color color)
         {
             _spriteBatch.Draw(tex, new Rectangle((int)x, (int)y, (int)width, (int)height), color);
+        }
+        static bool Overlapline(float a, float b, float c, float d)
+        {
+            return c < b && d > a;
+        }
+        public static bool OverlapRects(Vector2 pos1, Vector2 size1, Vector2 pos2, Vector2 size2)
+        {
+            bool x = Overlapline(pos1.X, pos1.X + size1.X, pos1.Y, pos1.Y + size1.Y);
+            bool y = Overlapline(pos2.X, pos2.X + size2.X, pos2.Y, pos2.Y + size2.Y);
+            return x && y;
         }
     }
 }

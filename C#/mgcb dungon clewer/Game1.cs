@@ -39,6 +39,7 @@ namespace mgcb_dungon_clewer
 
         protected override void Initialize()
         {
+
             // TODO: Add your initialization logic here
             texture = new Texture2D(GraphicsDevice, 1, 1);
             texture.SetData(new Color[] { Color.White });
@@ -137,11 +138,11 @@ namespace mgcb_dungon_clewer
             {
                 fill = Color.Blue;
 
-                for (int i = 0; i < width / 100; i++)
+                for (int i = 0; i < width/ 100; i++)
                 {
                     for (int j = 0; j < heigth / 100; j++)
                     {
-                        DrawRect(i * 100, j * 1300, 100, 100, stroke, fill);
+                        DrawRect(i * 100, j * 100, 100, 100, stroke, fill);
                     }
                 }
             }
