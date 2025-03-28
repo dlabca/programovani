@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YouTube Frame-by-Frame</title>
+</head>
+<body>
+    <input type="text" id="videoUrl" placeholder="Vlož YouTube URL">
+    <button onclick="loadVideo()">Načíst video</button>
+    <div id="player"></div>
+    <button onclick="prevFrame()">← Předchozí snímek</button>
+    <button onclick="nextFrame()">Další snímek →</button>
+
+    <script>
+        let player;
+        let fps = 30; // Odhadovaná snímková frekvence (lze upravit)
+
+        function loadVideo() {
+            let url = document.getElementById("videoUrl").value;
+            let videoId = extractVideoID(url);
+            if (videoId) {
+                if (player) player.destroy();
+                player = new YT.Player('player', {
+                    height: '360',
+                    width: '640',
+                    videoId: videoId,
+                    playerVars: { 'playsinline': 1 },
+                    events: {
+                        'onReady': onPlayerReady
+                    }
+                });
+            } else {
+                alert("Neplatná URL adresa!");
+            }
+        }
+
+        function extractVideoID(url) {
+            let match = url.match(/(?:youtu\.be\/|youtube\.com\/(?:.*v=|.*\/|.*embed\/|.*v%3D))([^?&]+)/);
+            return match ? match[1] : null;
+        }
+
+        function onPlayerReady(event) {
+            event.target.pauseVideo();
+        }
+
+        function nextFrame() {
+            if (player) {
+                let currentTime = player.getCurrentTime();
+                player.seekTo(currentTime + 1 / fps, true);
+            }
+        }
+
+        function prevFrame() {
+            if (player) {
+                let currentTime = player.getCurrentTime();
+                player.seekTo(Math.max(0, currentTime - 1 / fps), true);
+            }
+        }
+    </script>
+
+    <script src="https://www.youtube.com/iframe_api"></script>
+
+</body>
+</html>

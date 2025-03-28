@@ -45,10 +45,13 @@ namespace DungeonCrawler
             Room room1 = new Room("Vstupni hala", "Jste v temne vstupni hale. Je zde vychod na vychod.");
             Room room2 = new Room("Chodba", "Jste v uzke chodbe. Jsou zde vychody na zapad a sever.");
             Room room3 = new Room("Komnata", "Jste v rozlehle komnate. Je zde vychody na sever a jih.");
-            Room room4 = new Room("tajna mistnost komnaty", "jste v bytelne zkryte casti komnaty je zde poklad východy jsou na sever a jih");
-            Room room5 = new Room("zbrojírna", "Jste ve zbrojírně , je tady několik brnění. Vychody:jih,vychod ");
+            Room room4 = new Room("tajna mistnost komnaty", "jste v bytelne zkryte casti komnaty je zde poklad východy jsou na zapad a jih");
+            Room room5 = new Room("zbrojírna", "Jste ve zbrojírně , je tady několik brnění. Vychody:jih a vychod ");
             Room room6 = new Room("bojová aréna", "Jste v bojové aréně ,je zde Boos. východy: sever");
+
+            
             //sever,jih,vychod,zapad
+            //Room north, Room south, Room east, Room west
             room1.SetExits(null, null, room2, null);
             room2.SetExits(room3, null, null, room1);
             room3.SetExits(room4, room2, null, null);
@@ -231,7 +234,7 @@ namespace DungeonCrawler
                 else if (item.Name.ToLower() == "poklad")
                 {
                     player.RemoveItem(item);
-                    player.AddItem(new Item("mec bohu", 0));
+                    player.AddItem(new Item("mec bohu", 30, 50));
                     Console.WriteLine($"pouzili jste poklad a ziskali jste mec bohu. mec bohu je mec ktery dava 30 pozkozeni");
                 }
                 else if (parts.Length > 1 && parts[1].ToLower() == "brneni")
@@ -241,8 +244,13 @@ namespace DungeonCrawler
                     player.brneniValue = item.Value;
                     player.brneniDurabiliti = item.Value2;
                     Console.WriteLine($"Pouzili jste {itemName} a ziskali {armorVaule} brneni.");
-
-
+                }
+                else if (parts.Length > 1 && parts[0].ToLower() == "mec")
+                {
+                    int damageValue = item.Value;
+                    player.RemoveItem(item);
+                    player.StrongDamage();
+                    Console.WriteLine($"Pouzili jste {itemName} a ziskali {damageValue} silny utok.");
                 }
                 else
                 {
@@ -302,6 +310,7 @@ namespace DungeonCrawler
 
             public int brneniValue = 0;
             public int brneniDurabiliti = 0;
+            public int mecdurabiliti = 0;
             public int StrongDamage()
             {
                 if (FindItem("mec bohu") != null)
@@ -313,9 +322,17 @@ namespace DungeonCrawler
                     return 10;
                 }
             }
-            public int CalculateTakeDamage()
+            public int StrongDamage2()
             {
-                return 0;
+                //parts.Length > 1 && parts[1].ToLower() == "brneni"
+                if (FindItem("mec bohu") != null)
+                {
+                    return 30;
+                }
+                else
+                {
+                    return 10;
+                }
             }
 
             public string Name { get; private set; }

@@ -59,9 +59,12 @@ namespace mgcb_dungon_clewer
 
 
             myButton = new Button(texture, Font, new Rectangle(50, 50, 100, 15), "Klikni na mě", Color.DarkBlue, Color.White);
+
+
             // TODO: use this.Content to load your game content here
         }
 
+        KeyboardState oldState;
         protected override void Update(GameTime gameTime)
         {
             var keyboard = Keyboard.GetState();
@@ -72,16 +75,20 @@ namespace mgcb_dungon_clewer
                 Exit();
 
             // Přepínání fullscreen režimu pomocí klávesy F11
-            if (keyboard.IsKeyDown(Keys.F11) && !_graphics.IsFullScreen)
+            if (keyboard.IsKeyDown(Keys.F11) && !oldState.IsKeyDown(Keys.F11) && !_graphics.IsFullScreen)
             {
+                _graphics.PreferredBackBufferWidth = 1920;
+                _graphics.PreferredBackBufferHeight = 1080;
+                // _graphics.PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
                 _graphics.IsFullScreen = true;
                 _graphics.ApplyChanges();
             }
-            else if (keyboard.IsKeyDown(Keys.F11) && _graphics.IsFullScreen)
+            else if (keyboard.IsKeyDown(Keys.F11) && !oldState.IsKeyDown(Keys.F11) && _graphics.IsFullScreen)
             {
-                _graphics.IsFullScreen = false;
                 _graphics.PreferredBackBufferWidth = width;
                 _graphics.PreferredBackBufferHeight = heigth;
+                _graphics.IsFullScreen = false;
+
                 _graphics.ApplyChanges();
             }
 
@@ -120,6 +127,8 @@ namespace mgcb_dungon_clewer
             }
 
             base.Update(gameTime);
+
+            oldState = keyboard;
         }
 
 
@@ -138,7 +147,7 @@ namespace mgcb_dungon_clewer
             {
                 fill = Color.Blue;
 
-                for (int i = 0; i < width/ 100; i++)
+                for (int i = 0; i < width / 100; i++)
                 {
                     for (int j = 0; j < heigth / 100; j++)
                     {
@@ -149,7 +158,7 @@ namespace mgcb_dungon_clewer
 
             myButton.Draw(_spriteBatch);
 
-            //_spriteBatch.DrawString(Font, "Hello, World!", new Vector2(100, 100), Color.White);
+            _spriteBatch.DrawString(Font,_graphics.IsFullScreen? "full":"nefull" , new Vector2(100, 100), Color.White);
             _spriteBatch.End();
 
             base.Draw(gameTime);
