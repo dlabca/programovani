@@ -221,10 +221,12 @@ namespace DungeonCrawler
 
         private void UseItem(string itemName)
         {
-            Item item = player.FindItem(itemName);
-            string[] parts = item.Name.Split(' ');
+            Item item = player.FindItem(itemName.Trim());
+
+
             if (item != null)
             {
+                string[] parts = item.Name.Split(' ');
                 if (item.Name.ToLower() == "lektvar zivota")
                 {
                     player.IncreaseHealth(item.Value);
@@ -320,7 +322,7 @@ namespace DungeonCrawler
             public int baseAttackPower = 10;
             public int StrongDamage()
             {
-                if(mecdurabiliti <= 0)
+                if (mecdurabiliti <= 0)
                 {
                     damagevalue = baseAttackPower;
                     Console.WriteLine("mec se vam rozbil");
