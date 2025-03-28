@@ -234,7 +234,7 @@ namespace DungeonCrawler
                 else if (item.Name.ToLower() == "poklad")
                 {
                     player.RemoveItem(item);
-                    player.AddItem(new Item("mec bohu", 30, 50));
+                    player.AddItem(new Item("mec bohu", 30, 1));
                     Console.WriteLine($"pouzili jste poklad a ziskali jste mec bohu. mec bohu je mec ktery dava 30 pozkozeni");
                 }
                 else if (parts.Length > 1 && parts[1].ToLower() == "brneni")
@@ -249,6 +249,8 @@ namespace DungeonCrawler
                 {
                     int damageValue = item.Value;
                     player.RemoveItem(item);
+                    player.mecdurabiliti = item.Value2;
+                    player.damagevalue = item.Value;
                     Console.WriteLine($"Pouzili jste {itemName} a ziskali {damageValue} silny utok.");
                 }
                 else
@@ -289,14 +291,7 @@ namespace DungeonCrawler
             }
             public bool IsRoomExist(Room room)
             {
-                if (room != null)
-                {
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
+                return room != null;
             }
 
             public void AddEnemy(Enemy enemy)
@@ -322,28 +317,16 @@ namespace DungeonCrawler
             public int brneniDurabiliti = 0;
             public int mecdurabiliti = 0;
             public int damagevalue;
+            public int baseAttackPower = 10;
             public int StrongDamage()
             {
-                if (FindItem("mec bohu") != null)
+                if(mecdurabiliti <= 0)
                 {
-                    return 30;
+                    damagevalue = baseAttackPower;
+                    Console.WriteLine("mec se vam rozbil");
                 }
-                else
-                {
-                    return 10;
-                }
-            }
-            public int StrongDamage2()
-            {
-                //parts.Length > 1 && parts[1].ToLower() == "brneni"
-                if (FindItem("mec bohu") != null)
-                {
-                    return 30;
-                }
-                else
-                {
-                    return 10;
-                }
+                mecdurabiliti--;
+                return damagevalue;
             }
 
             public string Name { get; private set; }
