@@ -49,7 +49,7 @@ namespace DungeonCrawler
             Room room5 = new Room("zbrojírna", "Jste ve zbrojírně , je tady několik brnění. Vychody:jih a vychod ");
             Room room6 = new Room("bojová aréna", "Jste v bojové aréně ,je zde Boos. východy: sever");
 
-            
+
             //sever,jih,vychod,zapad
             //Room north, Room south, Room east, Room west
             room1.SetExits(null, null, room2, null);
@@ -249,7 +249,6 @@ namespace DungeonCrawler
                 {
                     int damageValue = item.Value;
                     player.RemoveItem(item);
-                    player.StrongDamage();
                     Console.WriteLine($"Pouzili jste {itemName} a ziskali {damageValue} silny utok.");
                 }
                 else
@@ -288,6 +287,17 @@ namespace DungeonCrawler
                 East = east;
                 West = west;
             }
+            public bool IsRoomExist(Room room)
+            {
+                if (room != null)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
 
             public void AddEnemy(Enemy enemy)
             {
@@ -311,6 +321,7 @@ namespace DungeonCrawler
             public int brneniValue = 0;
             public int brneniDurabiliti = 0;
             public int mecdurabiliti = 0;
+            public int damagevalue;
             public int StrongDamage()
             {
                 if (FindItem("mec bohu") != null)
