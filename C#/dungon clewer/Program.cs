@@ -138,6 +138,12 @@ namespace DungeonCrawler
                         Console.WriteLine("Nezadal jste nazev predmetu k pouziti.");
                     }
                     break;
+                case "clear":
+                    Console.Clear();
+                    break;
+                case "help":
+                    Console.WriteLine("Prikazy: sever, jih, vychod, zapad, prozkoumej, boj, inventar, vezmi [nazev predmetu], pouzij [nazev predmetu], clear, konec");
+                    break;
                 default:
                     Console.WriteLine("Neznamy prikaz.");
                     break;
