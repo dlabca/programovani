@@ -10,7 +10,7 @@ class Program
     static void Main()
     {
         // Pole hledaných výrazů
-        string[] searchTerms = { "dědictvý","rodu","trnhofů"};  // Zadejte více hledaných slov
+        string[] searchTerms = {"Scrcpy"};  // Zadejte více hledaných slov
 
         // Získejte všechny logické disky v systému
         foreach (var drive in DriveInfo.GetDrives())
@@ -39,6 +39,10 @@ class Program
                 {
                     folderCount++;
                     Console.WriteLine($"Složka obsahující některé z hledaných slov nalezena: {directory}");
+                    using (StreamWriter writer = new StreamWriter("soubor.txt"))
+                    {
+                        writer.WriteLine($"Složka: {directory}"); // Zápis do souboru
+                    }
                 }
 
                 try
@@ -64,7 +68,7 @@ class Program
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Chyba při prohledávání složky: {folderPath}. Chyba: {ex.Message}");
+            //Console.WriteLine($"Chyba při prohledávání složky: {folderPath}. Chyba: {ex.Message}");
         }
     }
 }

@@ -38,6 +38,26 @@ namespace DungeonCrawler
 
                 HandleCommand(command);
             }
+            /*
+                        while (true)
+            {
+                Console.Write("> ");
+                string command = Console.ReadLine().ToLower();
+                string[] parts = command.Split(',');
+                foreach (string item in parts)
+                {
+                    if (item == "konec")
+                    {
+                        Console.WriteLine("Konec hry.");
+                        break;
+                    }
+                    else
+                    {
+                        HandleCommand(command);
+                    }
+                }
+            }
+            */
         }
 
         private void SetupRooms()

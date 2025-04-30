@@ -158,4 +158,4 @@ namespace testGameConsole
             _console.AddMessage($"Barva pozadí změněna na {args[1]}");
         }
     }
-}
+} 
