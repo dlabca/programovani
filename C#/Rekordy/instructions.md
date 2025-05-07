@@ -1,1 +1,0 @@
-[Jsem línej to přepisovat, tak tady máte odkaz na zadání](https://kasiopea.matfyz.cz/archiv/2023/doma/B/)
