@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html lang="cs">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Školní kalendář</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .calendar-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 5px;
+        }
+
+        .calendar-day-name {
+            text-align: center;
+            font-weight: bold;
+            padding: 10px;
+            border-bottom: 2px solid #e0e0ff;
+        }
+
+        .calendar-day {
+            min-height: 80px;
+            padding: 5px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .calendar-day:hover {
+            background-color: #f5f5f5;
+        }
+
+        .calendar-day.selected {
+            background-color: #e6f0ff;
+            border: 1px solid #4d90fe;
+        }
+
+        .calendar-day.other-month {
+            background-color: #f8f8f8;
+            color: #aaa;
+        }
+
+        .event-form {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #ddd;
+        }
+
+        .event-list {
+            margin-top: 10px;
+        }
+
+        .event-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+
+        .event-item span {
+            flex-grow: 1;
+            margin-left: 5px;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            background-color: #4d90fe;
+            color: white;
+        }
+
+        .btn-danger {
+            background-color: #ff4d4d;
+            color: white;
+            padding: 8px 16px;
+        }
+
+        .event-marker {
+            border-radius: 3px;
+            padding: 2px 4px;
+            font-size: 10px;
+            margin-top: 2px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            display: block;
+        }
+
+        .event-marker.completed {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        .event-marker.not-completed {
+            background-color: #ff4d4d;
+            color: white;
+        }
+
+        .calendar-day.today {
+            background-color: #4d90fe;
+            font-weight: bold;
+            color: white;
+        }
+
+        .more-events {
+            font-size: 10px;
+            color: #4d90fe;
+            position: absolute;
+            bottom: 5px;
+            left: 5px;
+        }
+
+        input[type="checkbox"] {
+            margin-right: 5px;
+        }
+
+        .multi-day-container {
+            margin-bottom: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 10px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        /* Malý indikátor připojení v pravém horním rohu */
+        .sync-indicator {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: #ff4d4d;
+            z-index: 1000;
+            transition: background-color 0.3s;
+        }
+
+        .sync-indicator.connected {
+            background-color: #4CAF50;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Malý indikátor připojení -->
+    <div id="sync-indicator" class="sync-indicator" title="Stav synchronizace"></div>
+
+    <div class="calendar-container">
+        <div class="calendar-header">
+            <h2 id="current-month">Měsíc Rok</h2>
+            <div>
+                <button id="prev-month" class="btn btn-primary">&laquo;</button>
+                <button id="next-month" class="btn btn-primary">&raquo;</button>
+            </div>
+        </div>
+
+        <div id="calendar-grid" class="calendar-grid">
+        </div>
+
+        <div id="event-form" class="event-form">
+            <h3 id="selected-date">Vyberte datum pro přidání události</h3>
+
+            <div id="event-controls" style="display: none;">
+                <div style="display: flex; flex-direction: column; margin-bottom: 10px;">
+                    <input type="text" id="new-event-title" placeholder="Název události"
+                        style="padding: 8px; margin-bottom: 5px;">
+                    <select id="subject-select" style="padding: 8px; margin-bottom: 10px;">
+                        <option value="" disabled selected>Vyberte předmět</option>
+                        <option value="Mat">Matematika</option>
+                        <option value="Cjl">Čeština</option>
+                        <option value="Aj">Angličtina</option>
+                        <option value="Dej">Dějepis</option>
+                        <option value="Fyz">Fyzika</option>
+                        <option value="Che">Chemie</option>
+                        <option value="Bio">Biologie</option>
+                        <option value="Zem">Zeměpis</option>
+                        <option value="Inf">Informatika</option>
+                        <option value="jiné">jiné</option>
+                    </select>
+
+                    <div class="multi-day-container">
+                        <input type="checkbox" id="multi-day-event" style="margin-right: 5px;">
+                        <label for="multi-day-event">Vícedenní událost</label>
+                    </div>
+
+                    <div id="end-date-container" class="form-group" style="display: none;">
+                        <label for="end-date">Koncové datum:</label>
+                        <input type="date" id="end-date" style="padding: 8px; margin-bottom: 10px;">
+                    </div>
+
+                    <div class="form-group">
+                        <input type="checkbox" id="completed-checkbox" style="margin-right: 5px;">
+                        <label for="completed-checkbox">Označit jako splněné</label>
+                    </div>
+
+                    <textarea id="new-event-note" placeholder="Poznámky k události"
+                        style="padding: 8px; margin-bottom: 10px;"></textarea>
+                    <button id="add-event" class="btn btn-primary">Přidat</button>
+                </div>
+
+                <div class="event-list">
+                    <h4>Seznam událostí:</h4>
+                    <ul id="event-list"></ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+        import { getDatabase, ref, set, onValue, off, remove, push } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js';
+
+        // Firebase konfigurace - NAHRAĎTE SVÝMI ÚDAJI
+        const firebaseConfig = {
+            apiKey: "AIzaSyApGf4BLQJ3UD6NC96v2eCXhXJexMA54d4",
+            authDomain: "kalendar-9232c.firebaseapp.com",
+            databaseURL: "https://kalendar-9232c-default-rtdb.europe-west1.firebasedatabase.app",
+            projectId: "kalendar-9232c",
+            storageBucket: "kalendar-9232c.firebasestorage.app",
+            messagingSenderId: "352589407427",
+            appId: "1:352589407427:web:e8a54e01e2750bb30a2e76",
+            measurementId: "G-LWVX0V90DX"
+        };
+
+        // Inicializace Firebase
+        let app, database, isFirebaseConnected = false;
+
+        try {
+            app = initializeApp(firebaseConfig);
+            database = getDatabase(app);
+            isFirebaseConnected = true;
+            updateSyncIndicator(true);
+        } catch (error) {
+            console.log('Firebase není dostupný, používá se lokální režim');
+            updateSyncIndicator(false);
+        }
+
+        // Stav aplikace
+        let currentDate = new Date();
+        let selectedDay = null;
+        let events = {};
+        let editingEvent = null;
+        let isUpdatingFromFirebase = false; // Předejdeme nekonečné smyčce
+
+        // Dnešní datum
+        const today = new Date();
+
+        // DOM elementy
+        const calendarGrid = document.getElementById('calendar-grid');
+        const currentMonthElement = document.getElementById('current-month');
+        const prevMonthButton = document.getElementById('prev-month');
+        const nextMonthButton = document.getElementById('next-month');
+        const selectedDateElement = document.getElementById('selected-date');
+        const eventControls = document.getElementById('event-controls');
+        const newEventTitleInput = document.getElementById('new-event-title');
+        const newEventNoteInput = document.getElementById('new-event-note');
+        const addEventButton = document.getElementById('add-event');
+        const eventList = document.getElementById('event-list');
+        const subjectSelect = document.getElementById('subject-select');
+        const multiDayCheckbox = document.getElementById('multi-day-event');
+        const endDateInput = document.getElementById('end-date');
+        const completedCheckbox = document.getElementById('completed-checkbox');
+        const syncIndicator = document.getElementById('sync-indicator');
+
+        // Jména měsíců a dnů v češtině
+        const monthNames = [
+            "Leden", "Únor", "Březen", "Duben", "Květen", "Červen",
+            "Červenec", "Srpen", "Září", "Říjen", "Listopad", "Prosinec"
+        ];
+        const dayNames = ["Po", "Út", "St", "Čt", "Pá", "So", "Ne"];
+
+        // Firebase funkce
+        function updateSyncIndicator(connected) {
+            if (connected) {
+                syncIndicator.classList.add('connected');
+                syncIndicator.title = 'Synchronizováno s Firebase';
+            } else {
+                syncIndicator.classList.remove('connected');
+                syncIndicator.title = 'Offline režim';
+            }
+        }
+
+        function loadFromFirebase() {
+            if (!isFirebaseConnected) {
+                // Načtení z localStorage pokud Firebase není dostupný
+                const savedEvents = localStorage.getItem('schoolCalendarEvents');
+                if (savedEvents) {
+                    events = JSON.parse(savedEvents);
+                    renderCalendar();
+                    updateEventList();
+                }
+                return;
+            }
+
+            const eventsRef = ref(database, 'events');
+            onValue(eventsRef, (snapshot) => {
+                if (!isUpdatingFromFirebase) {
+                    const firebaseEvents = snapshot.val() || {};
+                    events = firebaseEvents;
+
+                    // Uložení do localStorage jako záloha
+                    localStorage.setItem('schoolCalendarEvents', JSON.stringify(events));
+
+                    renderCalendar();
+                    updateEventList();
+                }
+            }, (error) => {
+                console.log('Chyba při načítání z Firebase:', error);
+                updateSyncIndicator(false);
+
+                // Fallback na localStorage
+                const savedEvents = localStorage.getItem('schoolCalendarEvents');
+                if (savedEvents) {
+                    events = JSON.parse(savedEvents);
+                    renderCalendar();
+                    updateEventList();
+                }
+            });
+        }
+
+        function saveToFirebase() {
+            if (!isFirebaseConnected) {
+                // Pouze lokální uložení
+                localStorage.setItem('schoolCalendarEvents', JSON.stringify(events));
+                return;
+            }
+
+            isUpdatingFromFirebase = true;
+
+            const eventsRef = ref(database, 'events');
+            set(eventsRef, events).then(() => {
+                // Úspěšně uloženo
+                localStorage.setItem('schoolCalendarEvents', JSON.stringify(events));
+                updateSyncIndicator(true);
+
+                setTimeout(() => {
+                    isUpdatingFromFirebase = false;
+                }, 100);
+            }).catch((error) => {
+                console.log('Chyba při ukládání do Firebase:', error);
+                updateSyncIndicator(false);
+
+                // Fallback na localStorage
+                localStorage.setItem('schoolCalendarEvents', JSON.stringify(events));
+
+                setTimeout(() => {
+                    isUpdatingFromFirebase = false;
+                }, 100);
+            });
+        }
+
+        // Původní kalendářové funkce (beze změny)
+        function renderCalendar() {
+            currentMonthElement.textContent = `${monthNames[currentDate.getMonth()]} ${currentDate.getFullYear()}`;
+            calendarGrid.innerHTML = '';
+
+            dayNames.forEach(day => {
+                const dayNameElement = document.createElement('div');
+                dayNameElement.className = 'calendar-day-name';
+                dayNameElement.textContent = day;
+                calendarGrid.appendChild(dayNameElement);
+            });
+
+            const days = getDaysInMonth(currentDate);
+
+            days.forEach(dayObj => {
+                const dayElement = document.createElement('div');
+                dayElement.className = `calendar-day${dayObj.isCurrentMonth ? '' : ' other-month'}${dayObj.isCurrentMonth && dayObj.date && dayObj.date.toDateString() === today.toDateString() ? ' today' : ''}`;
+
+                if (dayObj.day !== null) {
+                    dayElement.textContent = dayObj.day;
+
+                    if (selectedDay && dayObj.isCurrentMonth &&
+                        selectedDay.getDate() === dayObj.day &&
+                        selectedDay.getMonth() === currentDate.getMonth() &&
+                        selectedDay.getFullYear() === currentDate.getFullYear()) {
+                        dayElement.classList.add('selected');
+                    }
+
+                    if (dayObj.isCurrentMonth && dayObj.date) {
+                        const dateStr = dayObj.date.toISOString().split('T')[0];
+                        const dayEvents = events[dateStr] ? [...events[dateStr]] : [];
+
+                        Object.keys(events).forEach(eventDateStr => {
+                            if (events[eventDateStr]) {
+                                events[eventDateStr].forEach(event => {
+                                    if (event.isMultiDay && event.endDate) {
+                                        const startDate = new Date(eventDateStr);
+                                        const endDate = new Date(event.endDate);
+                                        const currentIterationDay = dayObj.date;
+
+                                        if (
+                                            currentIterationDay >= startDate &&
+                                            currentIterationDay <= endDate &&
+                                            eventDateStr !== dateStr
+                                        ) {
+                                            dayEvents.push({
+                                                ...event,
+                                                isPartOfMultiDay: true,
+                                                originalDate: eventDateStr
+                                            });
+                                        }
+                                    }
+                                });
+                            }
+                        });
+
+                        const visibleEvents = dayEvents.slice(0, 2);
+
+                        visibleEvents.forEach(event => {
+                            const eventMarker = document.createElement('div');
+                            eventMarker.className = 'event-marker';
+
+                            if (event.completed) {
+                                eventMarker.classList.add('completed');
+                            } else {
+                                eventMarker.classList.add('not-completed');
+                            }
+
+                            let prefix = '';
+                            if (event.isMultiDay) {
+                                if (dateStr === event.originalDate || !event.isPartOfMultiDay) {
+                                    prefix = '📅 ';
+                                } else {
+                                    prefix = '↪ ';
+                                }
+                            }
+
+                            if (event.subject != "jiné") {
+                                eventMarker.textContent = `${prefix}${event.subject}: ${event.title}`;
+                            } else {
+                                eventMarker.textContent = `${prefix}${event.title}`;
+                            }
+
+                            dayElement.appendChild(eventMarker);
+                        });
+
+                        if (dayEvents.length > 2) {
+                            const moreEvents = document.createElement('div');
+                            moreEvents.className = 'more-events';
+                            moreEvents.textContent = `+ ${dayEvents.length - 2} další`;
+                            dayElement.appendChild(moreEvents);
+                        }
+                    }
+
+                    if (dayObj.isCurrentMonth) {
+                        dayElement.addEventListener('click', () => {
+                            selectDay(dayObj.date);
+                        });
+                    }
+                }
+
+                calendarGrid.appendChild(dayElement);
+            });
+        }
+
+        function getDaysInMonth(date) {
+            const year = date.getFullYear();
+            const month = date.getMonth();
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+            let firstDay = new Date(year, month, 1).getDay();
+            firstDay = firstDay === 0 ? 6 : firstDay - 1;
+            const days = [];
+            for (let i = 0; i < firstDay; i++) {
+                days.push({ day: null, isCurrentMonth: false });
+            }
+            for (let i = 1; i <= daysInMonth; i++) {
+                days.push({
+                    day: i,
+                    isCurrentMonth: true,
+                    date: new Date(year, month, i)
+                });
+            }
+            return days;
+        }
+
+        function selectDay(date) {
+            const selectedDays = document.querySelectorAll('.calendar-day.selected');
+            selectedDays.forEach(day => day.classList.remove('selected'));
+            selectedDay = date;
+
+            resetEventForm();
+            updateEventForm();
+            renderCalendar();
+        }
+
+        function resetEventForm() {
+            editingEvent = null;
+
+            newEventTitleInput.value = '';
+            newEventNoteInput.value = '';
+            subjectSelect.selectedIndex = 0;
+            multiDayCheckbox.checked = false;
+            endDateInput.value = '';
+            completedCheckbox.checked = false;
+            addEventButton.textContent = 'Přidat';
+
+            document.getElementById('end-date-container').style.display = 'none';
+        }
+
+        function updateEventForm() {
+            if (selectedDay) {
+                const formattedDate = `${selectedDay.getDate()}. ${monthNames[selectedDay.getMonth()]} ${selectedDay.getFullYear()}`;
+                selectedDateElement.textContent = `Události pro: ${formattedDate}`;
+                eventControls.style.display = 'block';
+
+                const minDate = selectedDay.toISOString().split('T')[0];
+                endDateInput.min = minDate;
+
+                if (!endDateInput.value) {
+                    endDateInput.value = minDate;
+                }
+
+                updateEventList();
+            } else {
+                selectedDateElement.textContent = 'Vyberte datum pro přidání události';
+                eventControls.style.display = 'none';
+            }
+        }
+
+        function updateEventList() {
+            eventList.innerHTML = '';
+            if (!selectedDay) return;
+
+            const dateStr = selectedDay.toISOString().split('T')[0];
+            const dayEvents = [];
+
+            if (events[dateStr] && events[dateStr].length > 0) {
+                events[dateStr].forEach((event, index) => {
+                    dayEvents.push({
+                        event,
+                        dateStr,
+                        index,
+                        isPartOfMultiDay: false
+                    });
+                });
+            }
+
+            Object.keys(events).forEach(eventDateStr => {
+                if (eventDateStr !== dateStr && events[eventDateStr]) {
+                    events[eventDateStr].forEach((event, index) => {
+                        if (event.isMultiDay && event.endDate) {
+                            const startDate = new Date(eventDateStr);
+                            const endDate = new Date(event.endDate);
+                            const currentDay = selectedDay;
+
+                            if (currentDay >= startDate && currentDay <= endDate) {
+                                dayEvents.push({
+                                    event,
+                                    dateStr: eventDateStr,
+                                    index,
+                                    isPartOfMultiDay: true
+                                });
+                            }
+                        }
+                    });
+                }
+            });
+
+            dayEvents.sort((a, b) => {
+                if (a.event.completed && !b.event.completed) return 1;
+                if (!a.event.completed && b.event.completed) return -1;
+                return new Date(a.dateStr) - new Date(b.dateStr);
+            });
+
+            if (dayEvents.length > 0) {
+                const completedEvents = dayEvents.filter(item => item.event.completed);
+                const notCompletedEvents = dayEvents.filter(item => !item.event.completed);
+
+                if (notCompletedEvents.length > 0) {
+                    const notCompletedHeader = document.createElement('h5');
+                    notCompletedHeader.textContent = 'Nesplněné události:';
+                    eventList.appendChild(notCompletedHeader);
+
+                    notCompletedEvents.forEach(item => {
+                        createEventListItem(item.event, item.dateStr, item.index, item.isPartOfMultiDay);
+                    });
+                }
+
+                if (completedEvents.length > 0) {
+                    const completedHeader = document.createElement('h5');
+                    completedHeader.textContent = 'Splněné události:';
+                    completedHeader.style.marginTop = '15px';
+                    eventList.appendChild(completedHeader);
+
+                    completedEvents.forEach(item => {
+                        createEventListItem(item.event, item.dateStr, item.index, item.isPartOfMultiDay);
+                    });
+                }
+            } else {
+                const li = document.createElement('li');
+                li.textContent = 'Žádné události';
+                li.style.fontStyle = 'italic';
+                li.style.color = '#999';
+                eventList.appendChild(li);
+            }
+        }
+
+        function createEventListItem(event, dateStr, index, isPartOfMultiDay) {
+            const li = document.createElement('li');
+            li.className = 'event-item';
+
+            const checkbox = document.createElement('input');
+            checkbox.type = 'checkbox';
+            checkbox.checked = event.completed;
+            checkbox.addEventListener('change', () => {
+                toggleEventCompletion(dateStr, index, checkbox.checked);
+            });
+            li.appendChild(checkbox);
+
+            const eventText = document.createElement('span');
+
+            let eventTitle = '';
+            if (event.subject != "jiné") {
+                eventTitle = `${event.subject}: ${event.title}`;
+            } else {
+                eventTitle = event.title;
+            }
+
+            if (event.isMultiDay) {
+                const startDate = new Date(dateStr);
+                const endDate = new Date(event.endDate);
+
+                const formattedStartDate = `${startDate.getDate()}. ${monthNames[startDate.getMonth()]}`;
+                const formattedEndDate = `${endDate.getDate()}. ${monthNames[endDate.getMonth()]}`;
+
+                eventTitle += ` (${formattedStartDate} - ${formattedEndDate})`;
+            }
+
+            if (event.note) {
+                eventTitle += ` (${event.note})`;
+            }
+
+            eventText.textContent = eventTitle;
+
+            if (event.completed) {
+                eventText.style.textDecoration = 'line-through';
+                eventText.style.color = '#666';
+            }
+
+            li.appendChild(eventText);
+
+            if (!isPartOfMultiDay) {
+                const editButton = document.createElement('button');
+                editButton.className = 'btn btn-primary';
+                editButton.textContent = 'Upravit';
+                editButton.style.marginLeft = '5px';
+                editButton.addEventListener('click', () => {
+                    editEvent(dateStr, index, event);
+                });
+                li.appendChild(editButton);
+
+                const deleteButton = document.createElement('button');
+                deleteButton.className = 'btn btn-danger';
+                deleteButton.textContent = 'Smazat';
+                deleteButton.style.marginLeft = '5px';
+                deleteButton.addEventListener('click', () => {
+                    deleteEvent(dateStr, index);
+                });
+                li.appendChild(deleteButton);
+            } else {
+                const infoText = document.createElement('span');
+                infoText.textContent = ' ↪ upravit v původním dni';
+                infoText.style.fontStyle = 'italic';
+                infoText.style.fontSize = '0.8em';
+                infoText.style.color = '#777';
+                li.appendChild(infoText);
+            }
+
+            eventList.appendChild(li);
+        }
+
+        function toggleEventCompletion(dateStr, index, completed) {
+            if (events[dateStr] && events[dateStr][index]) {
+                events[dateStr][index].completed = completed;
+                saveToFirebase(); // Automatická synchronizace
+                updateEventList();
+                renderCalendar();
+            }
+        }
+
+        function editEvent(dateStr, index, eventData) {
+            editingEvent = { date: dateStr, index: index };
+
+            newEventTitleInput.value = eventData.title;
+            newEventNoteInput.value = eventData.note || '';
+            subjectSelect.value = eventData.subject;
+            completedCheckbox.checked = eventData.completed || false;
+
+            if (eventData.isMultiDay) {
+                multiDayCheckbox.checked = true;
+                document.getElementById('end-date-container').style.display = 'block';
+                endDateInput.value = eventData.endDate;
+            } else {
+                multiDayCheckbox.checked = false;
+                document.getElementById('end-date-container').style.display = 'none';
+            }
+
+            addEventButton.textContent = 'Uložit změny';
+        }
+
+        function handleAddOrEditEvent() {
+            if (selectedDay && newEventTitleInput.value.trim() !== '' && subjectSelect.value !== '') {
+                const dateStr = selectedDay.toISOString().split('T')[0];
+
+                const newEvent = {
+                    subject: subjectSelect.value,
+                    title: newEventTitleInput.value.trim(),
+                    note: newEventNoteInput.value.trim(),
+                    completed: completedCheckbox.checked
+                };
+
+                if (multiDayCheckbox.checked && endDateInput.value) {
+                    newEvent.isMultiDay = true;
+                    newEvent.endDate = endDateInput.value;
+                }
+
+                if (editingEvent && editingEvent.date === dateStr) {
+                    if (events[dateStr]) {
+                        events[dateStr][editingEvent.index] = newEvent;
+                    }
+                    editingEvent = null;
+                    addEventButton.textContent = 'Přidat';
+                } else {
+                    if (!events[dateStr]) {
+                        events[dateStr] = [];
+                    }
+                    events[dateStr].push(newEvent);
+                }
+
+                saveToFirebase(); // Automatická synchronizace
+
+                resetEventForm();
+                updateEventList();
+                renderCalendar();
+            } else if (selectedDay) {
+                alert('Prosím, vyplňte název události a vyberte předmět.');
+            }
+        }
+
+        function deleteEvent(dateStr, index) {
+            if (events[dateStr]) {
+                events[dateStr].splice(index, 1);
+                if (events[dateStr].length === 0) {
+                    delete events[dateStr];
+                }
+                saveToFirebase(); // Automatická synchronizace
+                updateEventList();
+                renderCalendar();
+            }
+        }
+
+        // Event handlery
+        prevMonthButton.addEventListener('click', () => {
+            currentDate = new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1);
+            selectedDay = null;
+            resetEventForm();
+            updateEventForm();
+            renderCalendar();
+        });
+
+        nextMonthButton.addEventListener('click', () => {
+            currentDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1);
+            selectedDay = null;
+            resetEventForm();
+            updateEventForm();
+            renderCalendar();
+        });
+
+        addEventButton.addEventListener('click', handleAddOrEditEvent);
+
+        multiDayCheckbox.addEventListener('change', function () {
+            document.getElementById('end-date-container').style.display = this.checked ? 'block' : 'none';
+        });
+
+        newEventTitleInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                handleAddOrEditEvent();
+            }
+        });
+
+        // Inicializace aplikace
+        loadFromFirebase();
+        renderCalendar();
+    </script>
+</body>
+
+</html>
