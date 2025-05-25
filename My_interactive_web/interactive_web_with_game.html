@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Super interaktivní web</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/particles.js/2.0.0/particles.min.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="particles-js"></div>
+    <div class="container">
+        <header class="header">
+            <h1>Super Interaktivní Web</h1>
+        </header>
+
+        <nav class="nav">
+            <button class="nav-button active" data-section="home">Domů</button>
+            <button class="nav-button" data-section="games">My Games</button>
+            <button class="nav-button" data-section="about">O nás</button>
+            <button class="nav-button" data-section="contact">Kontakt</button>
+        </nav>
+
+        <!-- Domů sekce -->
+        <div class="section active" id="home">
+            <div class="content-box">
+                <h2>Vítejte na našem super interaktivním webu!</h2>
+                <p>Prozkoumejte naše hry, galerii a další zajímavý obsah.</p>
+                <div class="floating-box"></div>
+            </div>
+        </div>
+
+        <!-- My Games sekce -->
+        <div class="section" id="games">
+            <div class="content-box">
+                <h2>Naše hry</h2>
+                <div class="card-container">
+                    <div class="card" id="game1-card">
+                        <h3>Dungeon Crawler</h3>
+                        <p>Textová dobrodružná hra v temném podzemí</p>
+                    </div>
+                    <div class="card">
+                        <h3>Hra 2</h3>
+                        <p>Popis hry</p>
+                    </div>
+                    <div class="card">
+                        <h3>Hra 3</h3>
+                        <p>Popis hry</p>
+                    </div>
+                </div>
+
+                <!-- Dungeon Crawler hra -->
+                <div class="game-container" id="game1-container">
+                    <h3>Dungeon Crawler</h3>
+                    <div class="game-output" id="gameOutput"></div>
+                    <div class="game-input">
+                        <input type="text" id="gameInput" placeholder="Zadejte příkaz...">
+                        <button id="submitCommand">Odeslat</button>
+                    </div>
+                    <div class="game-help">
+                        Příkazy: sever, jih, vychod, zapad, prozkoumej, boj, inventar, vezmi [nazev predmetu], pouzij [nazev predmetu], clear, konec
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- O nás sekce -->
+        <div class="section" id="about">
+            <div class="content-box">
+                <h2>O nás</h2>
+                <p>Jsme tým nadšenců do her a interaktivního obsahu. Naším cílem je vytvářet zábavné a poutavé zážitky pro všechny hráče.</p>
+            </div>
+        </div>
+
+        <!-- Kontakt sekce -->
+        <div class="section" id="contact">
+            <div class="content-box">
+                <h2>Kontakt</h2>
+                <p>Email: info@superinteraktivniweb.cz</p>
+                <p>Telefon: +420 123 456 789</p>
+            </div>
+        </div>
+
+        <!-- Galerie -->
+        <div class="content-box">
+            <h2>Galerie</h2>
+            <div class="gallery">
+                <div class="gallery-item">
+                    <img src="/api/placeholder/400/300" alt="Obrázek 1">
+                    <div class="gallery-overlay">
+                        <h3>Obrázek 1</h3>
+                        <p>Popis obrázku</p>
+                    </div>
+                </div>
+                <div class="gallery-item">
+                    <img src="/api/placeholder/400/300" alt="Obrázek 2">
+                    <div class="gallery-overlay">
+                        <h3>Obrázek 2</h3>
+                        <p>Popis obrázku</p>
+                    </div>
+                </div>
+                <div class="gallery-item">
+                    <img src="/api/placeholder/400/300" alt="Obrázek 3">
+                    <div class="gallery-overlay">
+                        <h3>Obrázek 3</h3>
+                        <p>Popis obrázku</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body
